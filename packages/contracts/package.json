@@ -1,0 +1,16 @@
+{
+  "name": "@rzq/contracts",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'run via vitest at repo root'"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  }
+}

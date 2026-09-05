@@ -1,0 +1,25 @@
+{
+  "name": "@rzq/api",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "worker": "bun src/jobs/worker.ts",
+    "build": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "check:production-readiness": "bun src/check-production-readiness.ts"
+  },
+  "dependencies": {
+    "@rzq/contracts": "workspace:*",
+    "@rzq/database": "workspace:*",
+    "better-auth": "^1.3.26",
+    "drizzle-orm": "^0.44.2",
+    "elysia": "^1.3.12",
+    "postgres": "^3.4.7"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.1"
+  }
+}

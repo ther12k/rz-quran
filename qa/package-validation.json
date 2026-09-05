@@ -1,0 +1,69 @@
+{
+  "package": "RZ-Quran-Kids-Handoff-v1.0",
+  "validation_scope": "Documentation artifacts only; not application behavior or human approvals.",
+  "checks": [
+    {
+      "check": "JSON parsing",
+      "status": "pass",
+      "detail": "14 input JSON files parsed (generated report and root manifest excluded)."
+    },
+    {
+      "check": "JSON Schema and fixtures",
+      "status": "pass",
+      "detail": "3 schema meta-checks; 3 positive example files accepted; 2 invalid event fixtures rejected, with format checking enabled."
+    },
+    {
+      "check": "OpenAPI limited structural checks",
+      "status": "pass",
+      "detail": "57 unique operations; 69 schema meta-checks; 673 refs resolve; paths/auth metadata checked; 3 embedded examples pass. Limited structural checks, not full OpenAPI semantic conformance."
+    },
+    {
+      "check": "Task and requirement traceability",
+      "status": "pass",
+      "detail": "74 planned tasks with valid acyclic dependencies and acceptance criteria; 42 explicitly unrun app tests; all 18 requirements covered in both."
+    },
+    {
+      "check": "Design asset integrity",
+      "status": "pass",
+      "detail": "6 original images match registered SHA-256 and dimensions; 21 screen definitions; all gallery asset links resolve locally."
+    },
+    {
+      "check": "SQL reference static inspection",
+      "status": "pass",
+      "detail": "28 unique table declarations; all referenced table names declared; expected transaction/constraint markers present. Static inspection only: SQL not parsed or executed on PostgreSQL."
+    },
+    {
+      "check": "PRD reading copy checks",
+      "status": "pass",
+      "detail": "DOCX ZIP passes integrity check; 21-page PDF contains all 18 requirements and 6 design appendix sections; no blank page detected. Visual inspection is a separate recorded check."
+    },
+    {
+      "check": "Package entry points",
+      "status": "pass",
+      "detail": "Core entry points exist; no font files distributed."
+    }
+  ],
+  "counts": {
+    "json_files_parsed": 14,
+    "json_schemas": 3,
+    "positive_example_files": 3,
+    "negative_example_files": 2,
+    "api_operations": 57,
+    "api_component_schemas": 69,
+    "resolved_api_refs": 673,
+    "planned_tasks": 74,
+    "planned_app_tests": 42,
+    "requirements": 18,
+    "original_mockups": 6,
+    "specified_screens": 21,
+    "reference_sql_tables": 28,
+    "prd_pages": 21
+  },
+  "passed": true,
+  "not_performed": [
+    "Complete OpenAPI semantic validation with a dedicated validator.",
+    "PostgreSQL syntax/runtime/migration/constraint execution.",
+    "Application build, auth integration, browser/e2e/load/security tests.",
+    "Scholarly review, asset licensing approval or legal compliance assessment."
+  ]
+}

@@ -1,0 +1,5 @@
+# Versions used for the documentation-package checks; not application dependencies.
+PyYAML==6.0.3
+jsonschema==4.26.0
+Pillow==12.3.0
+PyMuPDF==1.26.7

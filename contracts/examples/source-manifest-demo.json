@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "demo_only": true,
+  "source_id": "55555555-5555-4555-8555-555555555555",
+  "source_kind": "lesson_notes",
+  "title": "Synthetic handoff example; not reviewed production content",
+  "source_version": "demo-1",
+  "upstream_reference": null,
+  "acquired_at": "2026-09-05T00:00:00Z",
+  "rights_status": "pending",
+  "permitted_uses": [],
+  "license_reference": null,
+  "attribution": "Non-production schema example only.",
+  "evidence_object_key": null,
+  "reviewer_reference": null,
+  "raw_object_key": null,
+  "raw_sha256": null
+}

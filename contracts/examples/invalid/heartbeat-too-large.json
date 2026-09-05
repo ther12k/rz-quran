@@ -1,0 +1,7 @@
+{
+  "event_id": "66666666-6666-4666-8666-666666666666",
+  "sequence": 2,
+  "client_at": null,
+  "type": "heartbeat",
+  "active_ms": 999999
+}

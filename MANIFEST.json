@@ -1,0 +1,273 @@
+{
+  "package": "RZ-Quran-Kids-Handoff-v1.0",
+  "version": "1.0",
+  "prepared": "2026-09-05",
+  "note": "SHA-256 covers all listed package files, excluding this manifest itself. These are documentation checks, not implementation or approval evidence.",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 3548,
+      "sha256": "02ee8737db5cb25a01e2b3feedd4b6f6a3718cfe664de39d3025aa87dd33b962"
+    },
+    {
+      "path": "HANDOFF_PROMPT.md",
+      "bytes": 2691,
+      "sha256": "d357c5618bcff01782c8cd85fa5fc3a8b62598b11e137b789fad23e09dd13e56"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4578,
+      "sha256": "be4bf1a9244c9c1fee20da44ca63ee530f5fd62024e4c405c7a524714b004530"
+    },
+    {
+      "path": "contracts/README.md",
+      "bytes": 1343,
+      "sha256": "85358c66887a270b0af83bb0b3cdb08bf3538fca532abe77465066e6efb49aa8"
+    },
+    {
+      "path": "contracts/content-manifest.schema.json",
+      "bytes": 3658,
+      "sha256": "8595125a4d2bb1bab3598dbc5d8db9f4819a6c8564a9abb137ab76084b700443"
+    },
+    {
+      "path": "contracts/examples/demo-hijaiyah-lesson.json",
+      "bytes": 652,
+      "sha256": "e8b3de4caa71c88daba49e606e7a2fcee2b5b6ea882f23f901524ac3c9ba81f8"
+    },
+    {
+      "path": "contracts/examples/invalid/client-child-injection.json",
+      "bytes": 170,
+      "sha256": "f4c75765cbaac26752234ea5dad3f66c2c4517679964b4dd76694081bec5b7ac"
+    },
+    {
+      "path": "contracts/examples/invalid/heartbeat-too-large.json",
+      "bytes": 141,
+      "sha256": "d5138e06d41b57ea7cff8d7eba602fadbc53d02dd879d651c0602fd442af7e39"
+    },
+    {
+      "path": "contracts/examples/progress-batch.json",
+      "bytes": 229,
+      "sha256": "ec1f9043bfe771b23c619627faf44fd1699ae0fab92d5ccbe456cfb7bbec7959"
+    },
+    {
+      "path": "contracts/examples/source-manifest-demo.json",
+      "bytes": 561,
+      "sha256": "557d08fc8deb809c51ff4a2720862b5baad3fa555bdc63ab6dffb662262a7ff8"
+    },
+    {
+      "path": "contracts/lesson.schema.json",
+      "bytes": 6707,
+      "sha256": "ff25f8a160ff41935a90faf814c50cdaec8bb1f670f64890ceaf9d536f9296ae"
+    },
+    {
+      "path": "contracts/openapi.yaml",
+      "bytes": 207230,
+      "sha256": "ae0464ed346c09b84d88eaef9bed20d2825d3b2592c67e30f9ffe71ddf76ad35"
+    },
+    {
+      "path": "contracts/progress-event.schema.json",
+      "bytes": 3314,
+      "sha256": "18cf31d3c6fa2b06e9697120c25fc6a2d63bbd6b004fab0982bddd061fd8a21e"
+    },
+    {
+      "path": "database/README.md",
+      "bytes": 1725,
+      "sha256": "b3375d010333a445a29b9737b6516225af62a4ad024821a42ea3979b863c850d"
+    },
+    {
+      "path": "database/domain-reference.sql",
+      "bytes": 19100,
+      "sha256": "60a1a2ad0d1c0743d8e525db51cde15736ac9be67fe489e058788d958bf09f7b"
+    },
+    {
+      "path": "design/README.md",
+      "bytes": 1268,
+      "sha256": "8b9b7c5d15f2326cdb0d51c9e585a5c2e8f9b6a9ed9aaabc419a69485a5a500e"
+    },
+    {
+      "path": "design/asset-manifest.json",
+      "bytes": 3547,
+      "sha256": "37b1789fc3d7bc5826eaa7ec7c685c10da8785b19df7f39a25336030d4e4535b"
+    },
+    {
+      "path": "design/contact-sheet.jpg",
+      "bytes": 861474,
+      "sha256": "ae985b0757c13a30c424afba5813a69902566ef2b3ddb54bc4ac6ce2c74ffdfd"
+    },
+    {
+      "path": "design/gallery.html",
+      "bytes": 5476,
+      "sha256": "79fd6a2d152eda0afc5c89004367237211eb2757e0646fa72b3348e1406c1ff0"
+    },
+    {
+      "path": "design/indonesian-copy.json",
+      "bytes": 5377,
+      "sha256": "562c15913de0b3fe3ab00523b126372c968b6646e5a61674d830ebf3d2c42f3d"
+    },
+    {
+      "path": "design/mockups/01-home.png",
+      "bytes": 1556359,
+      "sha256": "f4ae3c87b0842fd0d87b7167a199bf98c5d0942cbefe2efbb23adf97f07e9d78"
+    },
+    {
+      "path": "design/mockups/02-learning-catalog.png",
+      "bytes": 1612548,
+      "sha256": "7ea78d1b4dd947039f2746258d29bd0e71db4ef92c0feef64c004ba74b9942ad"
+    },
+    {
+      "path": "design/mockups/03-short-surah-practice.png",
+      "bytes": 1648010,
+      "sha256": "606e0b9d0651fe1800321c7813ad6068fa99a62ed008d5b93fd115506ef96135"
+    },
+    {
+      "path": "design/mockups/04-interactive-quiz.png",
+      "bytes": 1499463,
+      "sha256": "37ca3ec652d5527735b53eff608c50c418708190675a39a657cd80dcb540c4be"
+    },
+    {
+      "path": "design/mockups/05-hijaiyah-game.png",
+      "bytes": 1643164,
+      "sha256": "2c0afbe636382d6a618c93279692a928ca8d275e8840a9d91a71bfb060293ec7"
+    },
+    {
+      "path": "design/mockups/06-parent-progress.png",
+      "bytes": 1356538,
+      "sha256": "777d2bcb20e4c5ea57b4209a4c4876b003fc37934a5dcb14b500e4975b77a1d3"
+    },
+    {
+      "path": "design/screen-inventory.json",
+      "bytes": 7620,
+      "sha256": "92ed1b9427b22c2392a9d5efacda79ef2c306c1a27533cb1e4ed870e26b73db3"
+    },
+    {
+      "path": "design/tokens.css",
+      "bytes": 1243,
+      "sha256": "dde531926f9e67f77e0f563265ffdde87dbe018f32b4bbc58681c9fc34983d51"
+    },
+    {
+      "path": "design/tokens.json",
+      "bytes": 1348,
+      "sha256": "ea1a9b9fe045febec6ab4a417b6d9a413d7150cc94cb6c67eefcad7b3a567f2b"
+    },
+    {
+      "path": "docs/01_PRD.md",
+      "bytes": 28419,
+      "sha256": "a3f62ee17de9d11f36e259cdd57df8ae27bf4b7f656891f2abc120ad289bef6d"
+    },
+    {
+      "path": "docs/02_UX_SPEC.md",
+      "bytes": 16967,
+      "sha256": "85cd5b5d53d2bb4c962ff9f3bbeddb52b8ebdefe304a2d3b823a3c680549c2cf"
+    },
+    {
+      "path": "docs/03_ARCHITECTURE.md",
+      "bytes": 12288,
+      "sha256": "eaaf8b1b37f38c93758b02c9053d65fa793597f65feac6fec16c1856579bf2b4"
+    },
+    {
+      "path": "docs/04_DATA_MODEL.md",
+      "bytes": 13504,
+      "sha256": "cb9bd265734d11762673685d175a3181539d9f960afc6399e5dbcb9a3621dcc7"
+    },
+    {
+      "path": "docs/05_API_SPEC.md",
+      "bytes": 10577,
+      "sha256": "0cda124121679f9c88f41692bfa1f3c72a189246e94c729ac54c872f71c866b1"
+    },
+    {
+      "path": "docs/06_CONTENT_AND_CURRICULUM.md",
+      "bytes": 8933,
+      "sha256": "9bdb4008d7a1bb4fb6bb18a9569558eaef5b748a7e067ee67f969432edcdfbc4"
+    },
+    {
+      "path": "docs/07_SECURITY_PRIVACY.md",
+      "bytes": 10699,
+      "sha256": "264e775e5f75945bce3130c45256dba855d02620e125503a98ba3603e9461b04"
+    },
+    {
+      "path": "docs/08_TEST_PLAN.md",
+      "bytes": 17198,
+      "sha256": "85530766d7274b5fa8700d2f76e25335d084a59230efbeeb94e66f129423f481"
+    },
+    {
+      "path": "docs/09_DELIVERY_PLAN.md",
+      "bytes": 5264,
+      "sha256": "b8a00888bf409aeb5712cdb00a2d3df63cfba974ab7f2c127d288ca6b0770622"
+    },
+    {
+      "path": "docs/10_OPERATIONS_RUNBOOK.md",
+      "bytes": 7313,
+      "sha256": "f13238f847d0506a19aebf4261a2ae067944d35a3ef4d7c4d5a9e08cc3b347ff"
+    },
+    {
+      "path": "docs/11_DECISIONS_AND_OPEN_QUESTIONS.md",
+      "bytes": 4906,
+      "sha256": "761d761447070cc5cf2b581a85093cb8c55643a0aa7d062ec5549076e5ad2e35"
+    },
+    {
+      "path": "docs/12_SOURCES.md",
+      "bytes": 6326,
+      "sha256": "75c195258725b7f2c724faf51097d1f5368f2230e9ecc4631cabc77a557f5027"
+    },
+    {
+      "path": "docs/13_IMPLEMENTATION_GUIDE.md",
+      "bytes": 6215,
+      "sha256": "775d4031242c5f7028a1452a3258bada573bf03f412f1b9a1c460fac8b575ea0"
+    },
+    {
+      "path": "qa/PACKAGE_VALIDATION.md",
+      "bytes": 3856,
+      "sha256": "4eceaef2ef6b223f4b7c07181d810b904e4c0daa6bedaedf8f825371737df0b3"
+    },
+    {
+      "path": "qa/package-validation.json",
+      "bytes": 2762,
+      "sha256": "dc29184df4ab3e59feb585731cbeca4866d34524fb889b5b6f022e25b1f5c1fc"
+    },
+    {
+      "path": "qa/planned-application-tests.json",
+      "bytes": 15607,
+      "sha256": "917b6de84175ce0c423af3a1ccd686fe19a4e7e3efbb9e20541d592041c8ba5a"
+    },
+    {
+      "path": "qa/requirements.txt",
+      "bytes": 148,
+      "sha256": "4070ca830eef62a4b3dc88d353ed77c7fc6be1d785fdc20c8410cc8a54eba541"
+    },
+    {
+      "path": "qa/validate_package.py",
+      "bytes": 13686,
+      "sha256": "45be10073b1bebef1d954a4fe0937c55cbf127147db19ab368fd12c7f87955f3"
+    },
+    {
+      "path": "reference/PRD.docx",
+      "bytes": 2017167,
+      "sha256": "80d27cec330aa051b0cba02d93630ee75e0a19f3ebdc50e0d5667906c6c00eee"
+    },
+    {
+      "path": "reference/PRD.pdf",
+      "bytes": 2153784,
+      "sha256": "dec4a02c33b5bbdd62f4d2f10e1bf27c68d1e11ea347ea33b02e766f871f98ac"
+    },
+    {
+      "path": "tasks/BACKLOG.md",
+      "bytes": 36617,
+      "sha256": "d52ac115f444e65feca5179256cc69e5d23a8a3a6b9c070a19e81bef6ea37487"
+    },
+    {
+      "path": "tasks/OUT_OF_SCOPE.md",
+      "bytes": 543,
+      "sha256": "a9f2e306ab6423f1c0ce1cc2d3a8ecdf5c2994159d3e832e8e1a3b12fdf0af39"
+    },
+    {
+      "path": "tasks/TRACEABILITY.md",
+      "bytes": 1928,
+      "sha256": "5c24665617bb5c456d171fbb8a9ce501b608f0938d567eb6bf54f00a62d078b4"
+    },
+    {
+      "path": "tasks/backlog.json",
+      "bytes": 60314,
+      "sha256": "7bae3302234268707757705906c0e124242ba0bb048120a0801938f02bcdf70e"
+    }
+  ]
+}

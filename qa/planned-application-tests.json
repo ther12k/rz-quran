@@ -1,0 +1,444 @@
+{
+  "warning": "These are planned tests, not executed application validation.",
+  "cases": [
+    {
+      "id": "QA001",
+      "title": "Adult verification",
+      "requirements": [
+        "FR-01"
+      ],
+      "method": "Create unverified adult, attempt child creation, verify email, retry required policy steps.",
+      "expected": "No child before verification/eligibility; valid recovery and safe expiry states.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA002",
+      "title": "Cross-parent isolation",
+      "requirements": [
+        "FR-02"
+      ],
+      "method": "With two parents and three child IDs, substitute IDs in every child read/write/report/export/select route.",
+      "expected": "No cross-parent data or mutations; consistent not-found/denial without existence leak.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA003",
+      "title": "Concurrent child limit",
+      "requirements": [
+        "FR-02"
+      ],
+      "method": "Submit simultaneous profile-create requests while parent already has two children.",
+      "expected": "At most one new active child commits; final count never exceeds three.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA004",
+      "title": "Server parent gate",
+      "requirements": [
+        "FR-03"
+      ],
+      "method": "Enter child mode; call parent endpoints directly, use history/back and reuse an expired gate.",
+      "expected": "Parent data/mutations denied; caches cleared; fresh reauthentication required.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA005",
+      "title": "Auth-handler bypass",
+      "requirements": [
+        "FR-01",
+        "FR-03"
+      ],
+      "method": "Attempt library account/email/session management endpoints in child mode.",
+      "expected": "Reviewed allowlist enforced; no hidden-route privilege bypass.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA006",
+      "title": "Consent and production eligibility",
+      "requirements": [
+        "FR-01",
+        "FR-15"
+      ],
+      "method": "Try unconfigured policy, fixture assurance in production and later family/child withdrawal.",
+      "expected": "Production fail-closed; writes stop immediately for withdrawn scope.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA007",
+      "title": "Home and landing states",
+      "requirements": [
+        "FR-04"
+      ],
+      "method": "Render landing and first-time/resumed/complete/no-content child home at 320 and 390 widths.",
+      "expected": "Eight benefits on landing; one clear child action; no fake scores or horizontal overflow.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA008",
+      "title": "Catalog visibility",
+      "requirements": [
+        "FR-05"
+      ],
+      "method": "Search/filter catalog containing draft, reviewed, published, retired and recalled versions.",
+      "expected": "Only entitled published results appear; no key/internal data leaks; useful empty state.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA009",
+      "title": "Prerequisite graph",
+      "requirements": [
+        "FR-05"
+      ],
+      "method": "Publish cyclic/broken curriculum and navigate locked/withdrawn prerequisites.",
+      "expected": "Invalid graph rejected; child has a valid path; parent override is audited without completion reward.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA010",
+      "title": "Audio lifecycle",
+      "requirements": [
+        "FR-06"
+      ],
+      "method": "Rapidly play/pause, switch routes/profiles during buffering, then trigger old ended event.",
+      "expected": "One audio controller; no stale playback or incorrect lesson advancement.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA011",
+      "title": "Media failures",
+      "requirements": [
+        "FR-06"
+      ],
+      "method": "Return 403/expired URL/503/bad MIME/range interruption and test replay.",
+      "expected": "Safe retry/unavailable messages; no microphone or synthetic recitation fallback.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA012",
+      "title": "Canonical source integrity",
+      "requirements": [
+        "FR-07",
+        "FR-13"
+      ],
+      "method": "Alter a verse byte, swap source IDs, change verse metadata count or mismatch audio segment.",
+      "expected": "Automated checks block invalid mappings; human review evidence is required for publish.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA013",
+      "title": "Arabic manual rendering",
+      "requirements": [
+        "FR-07",
+        "FR-17"
+      ],
+      "method": "Inspect approved marked Arabic at 320 px and 200% zoom in mobile Safari/Chrome and desktop browsers.",
+      "expected": "No clipping/reversal/unwanted translation; references and basmala follow approved edition.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA014",
+      "title": "Practice versus memorization",
+      "requirements": [
+        "FR-07",
+        "FR-11"
+      ],
+      "method": "Complete all ayah units without a parent observation, then add/change a parent observation.",
+      "expected": "Practice reaches full fraction without automatic fluency claim; separate parent-labeled history exists.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA015",
+      "title": "Question DTO leakage",
+      "requirements": [
+        "FR-08",
+        "FR-09"
+      ],
+      "method": "Inspect network JSON, DOM, cache and built bundle before answering.",
+      "expected": "No correct-option field or server key is shipped; options are valid public labels only.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA016",
+      "title": "First answer and retries",
+      "requirements": [
+        "FR-08",
+        "FR-09"
+      ],
+      "method": "Submit wrong first answer, correct retry, duplicate IDs and option from another question/session.",
+      "expected": "First accuracy remains wrong; retries support practice; invalid memberships rejected.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA017",
+      "title": "Quiz usability",
+      "requirements": [
+        "FR-08"
+      ],
+      "method": "Complete five questions by keyboard/touch including error/retry/no answer state.",
+      "expected": "Visible feedback and navigation; no timer pressure; zero data not treated as failure.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA018",
+      "title": "Game input parity",
+      "requirements": [
+        "FR-09"
+      ],
+      "method": "Complete sound game with single taps and keyboard, never dragging.",
+      "expected": "Same outcome as optional drag; selected state not color-only; summary is separate from active board.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA019",
+      "title": "Atomic event batches",
+      "requirements": [
+        "FR-10"
+      ],
+      "method": "Send 20 valid events, one malformed/ineligible event within a batch, and same IDs after timeout.",
+      "expected": "All new valid batch events commit once; invalid batch changes none; replay returns stored result.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA020",
+      "title": "Sequence conflicts",
+      "requirements": [
+        "FR-10"
+      ],
+      "method": "Race heartbeat/answer, skip sequence and reuse ID with different payload.",
+      "expected": "Conflict errors expose safe last sequence; no silent reordering/double increments.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA021",
+      "title": "Concurrent finish and stars",
+      "requirements": [
+        "FR-10"
+      ],
+      "method": "Finish the same session in parallel and complete another version of the same logical lesson.",
+      "expected": "One completion result per session and one logical-lesson first star per child.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA022",
+      "title": "Resume and replacement",
+      "requirements": [
+        "FR-10"
+      ],
+      "method": "Pause/resume under 24h, expire session, replace via parent gate then send old events.",
+      "expected": "Accepted history preserved; expired/replaced sessions cannot write into new state.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA023",
+      "title": "Active time estimation",
+      "requirements": [
+        "FR-10",
+        "FR-11"
+      ],
+      "method": "Send duplicate/large/negative heartbeats, background tab gaps and simultaneous sessions.",
+      "expected": "Bounded server-capped time only; no wall-clock idle or multi-tab double count.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA024",
+      "title": "Reports and denominators",
+      "requirements": [
+        "FR-11"
+      ],
+      "method": "Use mixed question counts, no answers, several local dates and a timezone change.",
+      "expected": "Weighted first-response accuracy and consistent local buckets; no divide-by-zero or fake totals.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA025",
+      "title": "Comfort settings",
+      "requirements": [
+        "FR-12"
+      ],
+      "method": "Set quiet/reduced-motion/goal settings then change child and reach goal.",
+      "expected": "Scope correct; requested lesson audio still works; break is gentle, not punitive.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA026",
+      "title": "Staff roles and MFA",
+      "requirements": [
+        "FR-13"
+      ],
+      "method": "Try every admin action as child, parent, wrong staff role and non-MFA staff session.",
+      "expected": "Least privilege and MFA enforced; no family impersonation or self-escalation.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA027",
+      "title": "Publication separation",
+      "requirements": [
+        "FR-13"
+      ],
+      "method": "Self-approve, modify approved payload, publish missing rights/audio and republish concurrently.",
+      "expected": "All invalid publication paths rejected; version hash/review relation remains immutable.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA028",
+      "title": "Import/upload security",
+      "requirements": [
+        "FR-13"
+      ],
+      "method": "Use oversized file, fake MIME, malformed JSON, arbitrary URL and redirect to private host.",
+      "expected": "Quarantine and allowlist checks stop delivery/fetch; errors do not leak credentials.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA029",
+      "title": "Recall propagation",
+      "requirements": [
+        "FR-14"
+      ],
+      "method": "Recall a version during active lesson, request fresh playback and start another session.",
+      "expected": "No new entitlement; active session stops on next check; history remains and safe alternative offered.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA030",
+      "title": "Private parent reports",
+      "requirements": [
+        "FR-14"
+      ],
+      "method": "Submit content report without gate and with another family’s object; inspect staff/audit output.",
+      "expected": "Only authorized reports accepted; notes private and excluded from ordinary logs.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA031",
+      "title": "Private data export",
+      "requirements": [
+        "FR-15"
+      ],
+      "method": "Export parent A, fetch job/link as B, expire link and inspect JSON fields.",
+      "expected": "Only A data; no secrets/keys; private expiring download; expected schema notes.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA032",
+      "title": "Deletion lifecycle",
+      "requirements": [
+        "FR-15"
+      ],
+      "method": "Delete profile/account, retry job and inspect DB/storage/caches; restore old backup.",
+      "expected": "Immediate revocation, safe repeated deletion and suppression after restore.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA033",
+      "title": "Offline boundaries",
+      "requirements": [
+        "FR-16"
+      ],
+      "method": "Cold offline open, drop network during loaded session, fill queue and reload.",
+      "expected": "Shell-only claim; unsaved progress clearly pending/lost on reload; no private service-worker cache.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA034",
+      "title": "Responsive layouts",
+      "requirements": [
+        "FR-17"
+      ],
+      "method": "Capture all primary child and representative parent/admin screens at 320/390/768/1024/1440.",
+      "expected": "Readable text, unobscured focus/buttons, real reflow; no whole-screen screenshot implementation.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA035",
+      "title": "Accessibility review",
+      "requirements": [
+        "FR-17"
+      ],
+      "method": "Keyboard, screen reader, contrast, 200% zoom, reduced motion, dialogs and chart table.",
+      "expected": "Manual issues resolved; scan results are not mislabeled as full accessibility certification.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA036",
+      "title": "Secret/PII/third-party audit",
+      "requirements": [
+        "FR-15",
+        "FR-18"
+      ],
+      "method": "Inspect bundle, network calls, log samples, job payloads and image fixtures.",
+      "expected": "No secrets, child tracking, mic/camera permission, raw passwords or unnecessary personal data.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA037",
+      "title": "HTTP security and limits",
+      "requirements": [
+        "FR-01",
+        "FR-03",
+        "FR-18"
+      ],
+      "method": "Cross-origin mutation, CSRF attack, oversized bodies and multi-replica rate-limit attempts.",
+      "expected": "Requests blocked appropriately with generic errors and safe Retry-After behavior.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA038",
+      "title": "Worker recovery",
+      "requirements": [
+        "FR-18"
+      ],
+      "method": "Kill worker mid-export/import/delete, let lease expire and rerun.",
+      "expected": "Idempotent effects, bounded retries, safe final job status and no duplicate external side effects.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA039",
+      "title": "Performance measurements",
+      "requirements": [
+        "FR-18"
+      ],
+      "method": "Run fixed mobile network/device profile and 50-active-session load scenario.",
+      "expected": "Report actual timings/budgets, bottlenecks and untested conditions; no fabricated benchmark pass.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA040",
+      "title": "Deploy and restore",
+      "requirements": [
+        "FR-18"
+      ],
+      "method": "Fresh local setup, staging migrate/smoke, app rollback and isolated database restore.",
+      "expected": "Documented scripts work; actual recovery measured; production flags and deletion replay verified.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA041",
+      "title": "Supervised pilot",
+      "requirements": [
+        "FR-04",
+        "FR-06",
+        "FR-08",
+        "FR-09",
+        "FR-11",
+        "FR-17"
+      ],
+      "method": "Run approved parent/child task protocol with qualified supervision and minimal data.",
+      "expected": "Record actual interventions and parent understanding; no unproven educational efficacy claim.",
+      "status": "not_run"
+    },
+    {
+      "id": "QA042",
+      "title": "Public launch gates",
+      "requirements": [
+        "FR-01",
+        "FR-13",
+        "FR-15",
+        "FR-18"
+      ],
+      "method": "Attempt release with missing source/legal/reviewer approval and with demo mode enabled.",
+      "expected": "Release blocked until named owners provide real evidence; agent cannot self-approve.",
+      "status": "not_run"
+    }
+  ]
+}

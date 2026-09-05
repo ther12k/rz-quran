@@ -1,0 +1,82 @@
+[
+  {
+    "file": "mockups/01-home.png",
+    "original_file": "playful_quran_learning_app_interface.png",
+    "title": "Home / public feature direction",
+    "screen_ids": [
+      "S01",
+      "S05"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "f4ae3c87b0842fd0d87b7167a199bf98c5d0942cbefe2efbb23adf97f07e9d78",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "Keep the friendly green/pastel direction. Move dense feature messaging to the public landing; child home prioritizes one activity."
+  },
+  {
+    "file": "mockups/02-learning-catalog.png",
+    "original_file": "pastel_islamic_learning_app_dashboard.png",
+    "title": "Learning catalog",
+    "screen_ids": [
+      "S06"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "7ea78d1b4dd947039f2746258d29bd0e71db4ef92c0feef64c004ba74b9942ad",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "Implement a real scrollable catalog with useful empty states. Use actual progress and server-derived access."
+  },
+  {
+    "file": "mockups/03-short-surah-practice.png",
+    "original_file": "hafalan_surat_pendek_anak.png",
+    "title": "Short-surah practice",
+    "screen_ids": [
+      "S08",
+      "S09"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "606e0b9d0651fe1800321c7813ad6068fa99a62ed008d5b93fd115506ef96135",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "Separate practice percentage from parent-assessed fluency. Never use generated Arabic seals as canonical text."
+  },
+  {
+    "file": "mockups/04-interactive-quiz.png",
+    "original_file": "interactive_arabic_letter_quiz_app.png",
+    "title": "Interactive quiz",
+    "screen_ids": [
+      "S11"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "37ca3ec652d5527735b53eff608c50c418708190675a39a657cd80dcb540c4be",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "The MVP uses five questions, not ten. First-response scoring is server-side; no answer keys are shipped before submission."
+  },
+  {
+    "file": "mockups/05-hijaiyah-game.png",
+    "original_file": "colorful_arabic_letter_learning_game.png",
+    "title": "Hijaiyah sound game",
+    "screen_ids": [
+      "S12"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "2c0afbe636382d6a618c93279692a928ca8d275e8840a9d91a71bfb060293ec7",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "Tapping is the primary interaction. Playing and completion are separate states. Stars must reflect real reward rules."
+  },
+  {
+    "file": "mockups/06-parent-progress.png",
+    "original_file": "colorful_progress_anak_dashboard.png",
+    "title": "Protected parent progress",
+    "screen_ids": [
+      "S16"
+    ],
+    "width": 941,
+    "height": 1672,
+    "sha256": "777d2bcb20e4c5ea57b4209a4c4876b003fc37934a5dcb14b500e4975b77a1d3",
+    "status": "AI-generated concept supplied earlier in this conversation; not production UI or canonical Quran content.",
+    "implementation_note": "Place this behind the parent gate. Use a two-column metric grid on mobile; remove fabricated dates, streaks and memorization claims."
+  }
+]

@@ -1,0 +1,145 @@
+{
+  "locale": "id-ID",
+  "note": "User-facing copy baseline. Variables use {name}; source Arabic is not stored in this copy file.",
+  "landing": {
+    "headline": "Semua yang Dibutuhkan Anak untuk Belajar Al-Qur'an",
+    "subheadline": "Dirancang agar anak belajar lebih mudah, lebih menyenangkan, dan tidak cepat bosan.",
+    "primaryCta": "Mulai bersama orang tua",
+    "secondaryCta": "Lihat cara belajar",
+    "features": [
+      {
+        "title": "Belajar Mendengar & Meniru",
+        "description": "Pelafalan yang jelas membantu anak membaca dengan lebih percaya diri."
+      },
+      {
+        "title": "Hafalan Al-Qur'an",
+        "description": "Belajar menghafal sedikit demi sedikit dengan lebih mudah."
+      },
+      {
+        "title": "Surat Pendek",
+        "description": "Mulai menghafal surat yang sering dibaca dalam salat."
+      },
+      {
+        "title": "Kuis Interaktif",
+        "description": "Menguji pemahaman anak dengan cara yang menyenangkan."
+      },
+      {
+        "title": "Permainan Huruf Hijaiyah",
+        "description": "Belajar terasa seperti bermain sehingga anak tidak cepat bosan."
+      },
+      {
+        "title": "Pantau Progres Anak",
+        "description": "Lihat perkembangan belajar anak kapan saja."
+      },
+      {
+        "title": "Aman untuk Anak",
+        "description": "Tanpa iklan dan tanpa konten yang mengganggu proses belajar."
+      },
+      {
+        "title": "Belajar Bertahap",
+        "description": "Mulai dari mengenal huruf hingga membaca Al-Qur'an secara bertahap."
+      }
+    ]
+  },
+  "navigation": {
+    "home": "Beranda",
+    "learn": "Belajar",
+    "play": "Main",
+    "achievements": "Prestasi",
+    "profile": "Profil",
+    "parent": "Orang tua"
+  },
+  "home": {
+    "greeting": "Assalamu'alaikum, {name}!",
+    "continue": "Lanjut belajar",
+    "start": "Ayo mulai belajar",
+    "suggestion": "Sedikit demi sedikit, yuk!",
+    "allDone": "Latihan hari ini selesai. Terima kasih sudah berusaha!"
+  },
+  "learning": {
+    "listen": "Dengarkan",
+    "pause": "Jeda",
+    "replay": "Dengarkan lagi",
+    "imitate": "Sekarang ikuti bacaannya",
+    "acknowledge": "Sudah berlatih",
+    "next": "Lanjut",
+    "previous": "Sebelumnya",
+    "step": "Langkah {current} dari {total}",
+    "repeatOnce": "Ulangi 1 kali",
+    "repeatThree": "Ulangi 3 kali",
+    "practiceFraction": "{done} dari {total} langkah dilatih",
+    "ayahFraction": "{done} dari {total} ayat dilatih",
+    "audioUnavailable": "Audio belum tersedia. Minta bantuan orang tua, ya.",
+    "buffering": "Menyiapkan audio…",
+    "practiceNotGrade": "Ini catatan latihan, bukan penilaian ketepatan bacaan.",
+    "noRecording": "Dengarkan dan ikuti. Suaramu tidak direkam."
+  },
+  "quiz": {
+    "title": "Kuis huruf",
+    "progress": "Soal {current} dari {total}",
+    "check": "Periksa",
+    "correct": "Bagus, jawabanmu tepat!",
+    "retry": "Belum tepat. Coba dengarkan lagi, ya.",
+    "complete": "Latihan selesai!",
+    "next": "Lanjut",
+    "noData": "Belum ada kuis"
+  },
+  "game": {
+    "title": "Cocokkan suara",
+    "instruction": "Dengarkan, lalu pilih huruf yang tepat.",
+    "select": "Pilih huruf",
+    "again": "Main lagi",
+    "finish": "Selesai dulu"
+  },
+  "progress": {
+    "title": "Progres anak",
+    "lessons": "Pelajaran selesai",
+    "surahs": "Surat yang dilatih",
+    "accuracy": "Ketepatan jawaban pertama",
+    "time": "Perkiraan waktu latihan",
+    "parentObservation": "Catatan orang tua",
+    "needsPractice": "Perlu latihan",
+    "developing": "Mulai lancar",
+    "parentConfirmed": "Lancar menurut orang tua",
+    "notAssessed": "Belum ada catatan orang tua",
+    "empty": "Belum ada latihan yang tercatat.",
+    "timezoneNote": "Hari mengikuti zona waktu saat latihan dicatat.",
+    "table": "Lihat data dalam tabel"
+  },
+  "gate": {
+    "title": "Minta bantuan orang tua",
+    "prompt": "Masukkan kata sandi untuk membuka area orang tua.",
+    "submit": "Buka area orang tua",
+    "expired": "Area orang tua terkunci kembali. Silakan masuk lagi.",
+    "failed": "Belum berhasil. Periksa kata sandi dan coba lagi.",
+    "notConsent": "Membuka area orang tua tidak menggantikan proses persetujuan yang diperlukan."
+  },
+  "privacy": {
+    "title": "Data dan privasi",
+    "export": "Unduh data",
+    "deleteChild": "Hapus profil anak",
+    "withdraw": "Tarik persetujuan",
+    "deletionPending": "Profil tidak bisa digunakan dan sedang diproses untuk dihapus.",
+    "exportPending": "Data sedang disiapkan.",
+    "demo": "Mode demo — bukan data atau materi produksi."
+  },
+  "states": {
+    "loading": "Sedang menyiapkan…",
+    "retry": "Coba lagi",
+    "offline": "Sambungkan internet untuk mulai belajar.",
+    "pendingSave": "Belum tersimpan. Menunggu koneksi internet.",
+    "saved": "Tersimpan",
+    "reloadWarning": "Latihan yang belum tersimpan bisa hilang jika halaman dimuat ulang.",
+    "recalled": "Materi ini sedang diperiksa. Yuk, pilih latihan lain.",
+    "sessionReplaced": "Latihan ini dilanjutkan di sesi lain.",
+    "expired": "Sesi latihan berakhir. Catatan yang sudah tersimpan tetap aman.",
+    "emptyContent": "Materi belum tersedia. Minta bantuan orang tua, ya."
+  },
+  "comfort": {
+    "break": "Sudah waktunya istirahat sebentar.",
+    "stop": "Selesai dulu",
+    "continue": "Lanjut sebentar",
+    "quiet": "Tanpa suara perayaan",
+    "reducedMotion": "Kurangi animasi"
+  }
+}

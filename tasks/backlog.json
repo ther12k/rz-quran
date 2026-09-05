@@ -1,0 +1,2057 @@
+{
+  "schema_version": "1.0",
+  "project": "RZ Quran Kids",
+  "status_note": "All tasks are planned; none have been implemented by this documentation handoff.",
+  "effort_note": "Relative sizing, not hours or schedule promises.",
+  "tasks": [
+    {
+      "id": "T001",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "S",
+      "title": "Inspect repository and preserve existing work",
+      "requirements": [
+        "FR-18"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Document current files, scripts, stack and unrelated changes.",
+        "Identify the children’s app boundary; do not overwrite an existing Fiqh chatbot module."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T002",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Verify dependency and runtime compatibility",
+      "requirements": [
+        "FR-01",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T001"
+      ],
+      "acceptance_criteria": [
+        "Record exact React/Vite/Bun/Elysia/auth/ORM versions actually tested.",
+        "Build a minimal Vite frontend and Elysia/auth integration; commit a pinned lockfile."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T003",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Product + privacy/legal",
+      "effort": "M",
+      "title": "Assign eligibility, consent and retention decisions",
+      "requirements": [
+        "FR-01",
+        "FR-02",
+        "FR-15"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Assign owners for D02/D03/D09/D10 and list unresolved market/risk questions.",
+        "Document that production child enrollment is blocked pending approved policy."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T004",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Content + rights",
+      "effort": "M",
+      "title": "Inventory canonical text, audio and curriculum dependencies",
+      "requirements": [
+        "FR-06",
+        "FR-07",
+        "FR-13"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "List candidate source releases and missing rights evidence separately per asset type.",
+        "Assign qualified content author/reviewer roles; do not assert approval."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T005",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Design + engineering",
+      "effort": "M",
+      "title": "Implement tokens and accessible UI primitives",
+      "requirements": [
+        "FR-04",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T001"
+      ],
+      "acceptance_criteria": [
+        "Translate design tokens into actual typography, spacing, focus and button components.",
+        "Check intended color pairs and 48-pixel touch targets without using screenshot backgrounds."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T006",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Create workspace scripts and CI",
+      "requirements": [
+        "FR-18"
+      ],
+      "dependencies": [
+        "T002"
+      ],
+      "acceptance_criteria": [
+        "Provide lint, typecheck, unit, integration, E2E, contract and build scripts.",
+        "CI installs the lockfile reproducibly and runs against a disposable database."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T007",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Integrate schemas and public DTO contracts",
+      "requirements": [
+        "FR-08",
+        "FR-10",
+        "FR-13",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T006"
+      ],
+      "acceptance_criteria": [
+        "Validate all bundled positive and negative examples.",
+        "Separate staff authoring payloads from child/public serialization, especially answer keys."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T008",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement checked database migrations",
+      "requirements": [
+        "FR-02",
+        "FR-10",
+        "FR-13",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T002",
+        "T007"
+      ],
+      "acceptance_criteria": [
+        "Generate auth schema and domain migrations with correct foreign keys.",
+        "Test clean apply and ownership/completion uniqueness constraints on PostgreSQL."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T009",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "S",
+      "title": "Create guarded synthetic demo fixtures",
+      "requirements": [
+        "FR-13",
+        "FR-15",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T007",
+        "T008"
+      ],
+      "acceptance_criteria": [
+        "Seed only clearly marked non-production data and missing-audio states.",
+        "Production startup/publication refuses demo flags, fixtures and test consent methods."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T010",
+      "milestone": "M0",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Security + engineering",
+      "effort": "M",
+      "title": "Review trust boundaries and threat cases",
+      "requirements": [
+        "FR-03",
+        "FR-13",
+        "FR-15"
+      ],
+      "dependencies": [
+        "T003",
+        "T004"
+      ],
+      "acceptance_criteria": [
+        "Map parent/child/staff capabilities and mounted-auth bypass risks.",
+        "Write negative-test inventory for ownership, answer leakage, replay, imports and exports."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T011",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Integrate adult authentication",
+      "requirements": [
+        "FR-01"
+      ],
+      "dependencies": [
+        "T002",
+        "T008",
+        "T010"
+      ],
+      "acceptance_criteria": [
+        "Use the maintained auth library for identity/password/session flows.",
+        "Keep secrets server-side; verify auth routes work behind the same-origin proxy."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T012",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement email verification and recovery",
+      "requirements": [
+        "FR-01"
+      ],
+      "dependencies": [
+        "T011"
+      ],
+      "acceptance_criteria": [
+        "Unverified account cannot create a real child profile.",
+        "Recovery/verification expiry and resend limits have tested safe UI states."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T013",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Enforce server-side parent gate",
+      "requirements": [
+        "FR-03"
+      ],
+      "dependencies": [
+        "T011",
+        "T008"
+      ],
+      "acceptance_criteria": [
+        "Password reauthentication creates a five-minute server gate.",
+        "Entering child mode, expiry and identity changes revoke adult privileges."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T014",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Guard the mounted authentication routes",
+      "requirements": [
+        "FR-01",
+        "FR-03"
+      ],
+      "dependencies": [
+        "T013"
+      ],
+      "acceptance_criteria": [
+        "Define a child-mode allowlist for safe auth-library routes.",
+        "Direct account/session/email mutation attempts cannot bypass the app parent gate."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T015",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + privacy",
+      "effort": "L",
+      "title": "Implement consent and eligibility state machine",
+      "requirements": [
+        "FR-01",
+        "FR-15"
+      ],
+      "dependencies": [
+        "T003",
+        "T012",
+        "T013"
+      ],
+      "acceptance_criteria": [
+        "Versioned family/child consent actions use server-validated assurance references.",
+        "Unconfigured production policy blocks enrollment; demo assurance is local/test only."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T016",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement parent-owned child profiles",
+      "requirements": [
+        "FR-02"
+      ],
+      "dependencies": [
+        "T008",
+        "T013",
+        "T015"
+      ],
+      "acceptance_criteria": [
+        "Nickname/avatar/age-band inputs validate and exclude unnecessary personal fields.",
+        "Three-profile limit is race-safe and all CRUD operations are owner-scoped."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T017",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement active child and mode switching",
+      "requirements": [
+        "FR-02",
+        "FR-03"
+      ],
+      "dependencies": [
+        "T016",
+        "T014"
+      ],
+      "acceptance_criteria": [
+        "Active child is stored in server session context and entering child mode clears the adult gate.",
+        "Switch/logout clears audio, query caches and pending personal UI state."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T018",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Create scoped repositories and authorization tests",
+      "requirements": [
+        "FR-02",
+        "FR-03",
+        "FR-15"
+      ],
+      "dependencies": [
+        "T016"
+      ],
+      "acceptance_criteria": [
+        "Every private lookup receives authenticated owner context.",
+        "Cross-parent read/write/select/delete attempts have consistent denial responses."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T019",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Serve one demo lesson through safe serialization",
+      "requirements": [
+        "FR-05",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T007",
+        "T009",
+        "T018"
+      ],
+      "acceptance_criteria": [
+        "Local-only published-demo view returns only permitted child fields.",
+        "No correct options, internal notes, reviewer identities or provider secrets escape."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T020",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Create pinned learning sessions",
+      "requirements": [
+        "FR-05",
+        "FR-10"
+      ],
+      "dependencies": [
+        "T017",
+        "T019"
+      ],
+      "acceptance_criteria": [
+        "Sessions pin a lesson version and derive child identity from the server context.",
+        "Concurrent session creation respects the one-writable-session rule and idempotency."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T021",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Accept ordered idempotent learning events",
+      "requirements": [
+        "FR-10"
+      ],
+      "dependencies": [
+        "T020"
+      ],
+      "acceptance_criteria": [
+        "Atomic batches validate session/unit ownership and contiguous sequences.",
+        "Identical retries reuse results; conflicting event IDs or sequence gaps fail safely."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T022",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Finish sessions and award first-completion stars",
+      "requirements": [
+        "FR-10"
+      ],
+      "dependencies": [
+        "T021"
+      ],
+      "acceptance_criteria": [
+        "Completion requires all server-defined units.",
+        "Concurrent/repeated finish returns one completion and at most one logical-lesson star."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T023",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Build usable child home and demo activity",
+      "requirements": [
+        "FR-04",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T005",
+        "T017",
+        "T019",
+        "T022"
+      ],
+      "acceptance_criteria": [
+        "At 390 px a real continue/start action is visible without squeezing cards.",
+        "First-use, resumed, no-content and pending-save states use actual data."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T024",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Build a real gated parent progress slice",
+      "requirements": [
+        "FR-11"
+      ],
+      "dependencies": [
+        "T022",
+        "T013"
+      ],
+      "acceptance_criteria": [
+        "Read real scoped lesson completion and active-time state from database.",
+        "Empty data is labeled honestly and reports require a live parent gate."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T025",
+      "milestone": "M1",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "QA + engineering",
+      "effort": "L",
+      "title": "Prove the end-to-end safe slice",
+      "requirements": [
+        "FR-01",
+        "FR-02",
+        "FR-03",
+        "FR-10",
+        "FR-11"
+      ],
+      "dependencies": [
+        "T012",
+        "T014",
+        "T015",
+        "T018",
+        "T023",
+        "T024"
+      ],
+      "acceptance_criteria": [
+        "Run adult setup → child lesson → finish → parent report on a real local database.",
+        "Exercise alternate-parent IDs, direct parent URLs and replayed completion requests."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T026",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement catalog search and filters",
+      "requirements": [
+        "FR-05"
+      ],
+      "dependencies": [
+        "T019",
+        "T023"
+      ],
+      "acceptance_criteria": [
+        "Only eligible published content is searchable; no web search dependency.",
+        "Debounced search cancels stale requests and has empty/error/no-result states."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T027",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement versioned stages and prerequisites",
+      "requirements": [
+        "FR-05"
+      ],
+      "dependencies": [
+        "T020",
+        "T022"
+      ],
+      "acceptance_criteria": [
+        "Curriculum graph validation rejects cycles and broken logical lesson references.",
+        "Locked states offer a valid next step and stable reporting denominator."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T028",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Build the single audio controller",
+      "requirements": [
+        "FR-06"
+      ],
+      "dependencies": [
+        "T005",
+        "T023"
+      ],
+      "acceptance_criteria": [
+        "Play/pause/loading/buffering/ended/unavailable states are deterministic.",
+        "Route switch, profile change and stale media callbacks cannot play/advance the wrong lesson."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T029",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement authorized media delivery",
+      "requirements": [
+        "FR-06",
+        "FR-07",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T019",
+        "T020"
+      ],
+      "acceptance_criteria": [
+        "Only approved assets entitled by published/current session content receive short-lived URLs.",
+        "Private/quarantine/withdrawn assets and arbitrary user-submitted URLs are denied."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T030",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Implement listen-and-imitate steps",
+      "requirements": [
+        "FR-06"
+      ],
+      "dependencies": [
+        "T028",
+        "T029",
+        "T021"
+      ],
+      "acceptance_criteria": [
+        "Requested audio and one/three repeats work without microphone permission.",
+        "Practice acknowledgment is labeled as practice, not pronunciation assessment."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T031",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + content",
+      "effort": "L",
+      "title": "Implement short-surah and ayah practice UI",
+      "requirements": [
+        "FR-07",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T030",
+        "T007"
+      ],
+      "acceptance_criteria": [
+        "Render source-keyed Arabic, attribution and last accepted unit accurately with reviewed staging data.",
+        "Missing media/content never falls back to generated recitation or fabricated text."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T032",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Assemble private question sessions and public choices",
+      "requirements": [
+        "FR-08",
+        "FR-09"
+      ],
+      "dependencies": [
+        "T019",
+        "T020"
+      ],
+      "acceptance_criteria": [
+        "Exactly five eligible reviewed questions/rounds are selected for configured pilot sets.",
+        "Public question data omits the correct option and records presentation order server-side."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T033",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement first-response scoring and retries",
+      "requirements": [
+        "FR-08",
+        "FR-09",
+        "FR-10"
+      ],
+      "dependencies": [
+        "T032",
+        "T021"
+      ],
+      "acceptance_criteria": [
+        "Selected option membership and question/session/version mapping validate server-side.",
+        "Retries preserve first-answer correctness and cannot duplicate reward/sequence effects."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T034",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Build quiz question and completion states",
+      "requirements": [
+        "FR-08",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T033",
+        "T005"
+      ],
+      "acceptance_criteria": [
+        "Five-question flow supports keyboard, large choices, feedback and retry.",
+        "No timer pressure, hidden answer-key data or ungrounded performance claims."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T035",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Build five-round sound-matching game",
+      "requirements": [
+        "FR-09",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T033",
+        "T028"
+      ],
+      "acceptance_criteria": [
+        "Tap and keyboard interaction work without drag; optional drag shares selection logic.",
+        "Playing/feedback/completed views are mutually coherent and use real reward results."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T036",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement resume and serial mutation queue",
+      "requirements": [
+        "FR-10",
+        "FR-16"
+      ],
+      "dependencies": [
+        "T021",
+        "T028",
+        "T033"
+      ],
+      "acceptance_criteria": [
+        "Answers, acknowledgments and heartbeats share ordered per-session submission.",
+        "Reconnect replays original IDs; replaced/expired/recalled sessions cannot sync into another session."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T037",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Add parent memorization observations",
+      "requirements": [
+        "FR-07",
+        "FR-11"
+      ],
+      "dependencies": [
+        "T024",
+        "T031"
+      ],
+      "acceptance_criteria": [
+        "Only the owning gated parent can append an observation for a surah.",
+        "Latest observation and history stay separate from automatic practice completion."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T038",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement active-time buckets and parent reports",
+      "requirements": [
+        "FR-10",
+        "FR-11"
+      ],
+      "dependencies": [
+        "T024",
+        "T033",
+        "T036"
+      ],
+      "acceptance_criteria": [
+        "Server caps heartbeats and prevents multi-tab duration duplication.",
+        "Weekly totals, quiz denominators, timezone labels and no-data states agree with stored records."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T039",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Build child achievements",
+      "requirements": [
+        "FR-10"
+      ],
+      "dependencies": [
+        "T022",
+        "T023"
+      ],
+      "acceptance_criteria": [
+        "Stars come from unique logical-lesson completion records.",
+        "Badges describe practice and contain no ranking, spending, streak loss or automatic hafal claim."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T040",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement soft session goals and comfort settings",
+      "requirements": [
+        "FR-12"
+      ],
+      "dependencies": [
+        "T016",
+        "T028"
+      ],
+      "acceptance_criteria": [
+        "Parent-selected goal offers a calm break without coercive lockout.",
+        "Quiet and reduced-motion settings persist with correct child scope and audio semantics."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T041",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + operations",
+      "effort": "L",
+      "title": "Provision staff capabilities and MFA gates",
+      "requirements": [
+        "FR-01",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T011",
+        "T010"
+      ],
+      "acceptance_criteria": [
+        "Admin routes require active provisioned role and current MFA evidence.",
+        "Content staff cannot read child reports or impersonate families."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T042",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + rights",
+      "effort": "M",
+      "title": "Implement source/rights registry",
+      "requirements": [
+        "FR-13"
+      ],
+      "dependencies": [
+        "T041",
+        "T004"
+      ],
+      "acceptance_criteria": [
+        "Store source versions, attribution, evidence, allowed use and reviewer decisions.",
+        "Pending/denied/revoked rights block content publication."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T043",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement quarantined media upload and verification",
+      "requirements": [
+        "FR-13"
+      ],
+      "dependencies": [
+        "T041",
+        "T042"
+      ],
+      "acceptance_criteria": [
+        "Signed uploads are constrained; actual bytes/MIME/size/checksum/decoding are validated.",
+        "Unverified files cannot be streamed to child sessions."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T044",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Build allowlisted source import adapters",
+      "requirements": [
+        "FR-13"
+      ],
+      "dependencies": [
+        "T042",
+        "T043"
+      ],
+      "acceptance_criteria": [
+        "Imports use registered source/object/adapter IDs, not unrestricted URL fetching.",
+        "Provider credentials/environment permissions are server-only and failures are redacted."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T045",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + content",
+      "effort": "L",
+      "title": "Validate canonical text and audio mappings",
+      "requirements": [
+        "FR-07",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T044"
+      ],
+      "acceptance_criteria": [
+        "Approved source metadata validates verse keys/counts and immutable hashes.",
+        "Every pilot segment has recorded human text/audio alignment checks before production."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T046",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "L",
+      "title": "Build structured lesson editor and staff preview",
+      "requirements": [
+        "FR-13"
+      ],
+      "dependencies": [
+        "T043",
+        "T045",
+        "T007"
+      ],
+      "acceptance_criteria": [
+        "Editor validates units/options/references and shows precise blocking errors.",
+        "Draft preview stays staff-only; changes after review require a new candidate/review."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T047",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + content",
+      "effort": "L",
+      "title": "Build curriculum release editing and review",
+      "requirements": [
+        "FR-05",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T027",
+        "T046"
+      ],
+      "acceptance_criteria": [
+        "Validate order, stage and prerequisite DAG with stable denominator.",
+        "Distinct reviewer and immutable release hash are required before publishing."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T048",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + content",
+      "effort": "L",
+      "title": "Implement review and publish transactions",
+      "requirements": [
+        "FR-13"
+      ],
+      "dependencies": [
+        "T041",
+        "T042",
+        "T045",
+        "T046"
+      ],
+      "acceptance_criteria": [
+        "Author cannot approve their own candidate and published payloads cannot be edited in place.",
+        "Rights, hash, audio and question-count failures prevent publication atomically."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T049",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement recall and content-status invalidation",
+      "requirements": [
+        "FR-14"
+      ],
+      "dependencies": [
+        "T048",
+        "T029",
+        "T036"
+      ],
+      "acceptance_criteria": [
+        "Recalled content disappears from new catalog/session/media access.",
+        "In-flight sessions stop on the next check with safe return path and historical progress retained."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T050",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Build parent content reporting and triage",
+      "requirements": [
+        "FR-14"
+      ],
+      "dependencies": [
+        "T013",
+        "T049"
+      ],
+      "acceptance_criteria": [
+        "Reason codes and optional short notes are owner-gated and private.",
+        "No child audio/photo attachments or public report publication."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T051",
+      "milestone": "M3",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement redacted audit trail",
+      "requirements": [
+        "FR-13",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T041",
+        "T048",
+        "T049"
+      ],
+      "acceptance_criteria": [
+        "Privileged actions include actor, object, request ID, outcome and immutable time.",
+        "Audit metadata excludes raw child fields, passwords, signed URLs and support text."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T052",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + privacy",
+      "effort": "M",
+      "title": "Implement withdrawal and reconsent enforcement",
+      "requirements": [
+        "FR-15"
+      ],
+      "dependencies": [
+        "T015",
+        "T036"
+      ],
+      "acceptance_criteria": [
+        "Family withdrawal blocks all profiles; child withdrawal blocks that profile immediately.",
+        "New consent requires approved current flow and revoked sessions cannot continue writing."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T053",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "L",
+      "title": "Implement private export jobs",
+      "requirements": [
+        "FR-15"
+      ],
+      "dependencies": [
+        "T024",
+        "T037",
+        "T041"
+      ],
+      "acceptance_criteria": [
+        "Owner-gated export includes only permitted family data with schema notes.",
+        "Downloads expire, enforce ownership and omit secrets/answer keys/internal evidence."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T054",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + privacy",
+      "effort": "L",
+      "title": "Implement deletion and backup suppression",
+      "requirements": [
+        "FR-15"
+      ],
+      "dependencies": [
+        "T052",
+        "T053"
+      ],
+      "acceptance_criteria": [
+        "Deletion immediately revokes access and idempotent jobs remove active data/objects.",
+        "A minimized suppression ledger prevents deleted profiles returning after restore."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T055",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + security",
+      "effort": "L",
+      "title": "Enforce request security and distributed limits",
+      "requirements": [
+        "FR-01",
+        "FR-03",
+        "FR-15",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T014",
+        "T033",
+        "T043"
+      ],
+      "acceptance_criteria": [
+        "CSRF/origin/cookie/CSP/body-size controls are verified on real routes.",
+        "Rate limits remain effective across configured API replicas and do not expose account existence."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T056",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement installable shell and explicit offline states",
+      "requirements": [
+        "FR-16"
+      ],
+      "dependencies": [
+        "T036"
+      ],
+      "acceptance_criteria": [
+        "Service worker caches only static shell/assets, not private API/content/media.",
+        "Cold offline, in-memory queue limit and reload loss are accurately explained."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T057",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Design + QA",
+      "effort": "L",
+      "title": "Verify responsive and accessible flows",
+      "requirements": [
+        "FR-04",
+        "FR-08",
+        "FR-09",
+        "FR-11",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T031",
+        "T034",
+        "T035",
+        "T038"
+      ],
+      "acceptance_criteria": [
+        "Capture 320/390/768/1024/1440 layouts and keyboard/200%-zoom checks.",
+        "Check contrast, tap alternatives, focus, screen-reader feedback and chart table equivalents."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T058",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Content + QA",
+      "effort": "M",
+      "title": "Review actual Arabic rendering",
+      "requirements": [
+        "FR-07",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T045",
+        "T031"
+      ],
+      "acceptance_criteria": [
+        "Use reviewed source text with marks on mobile Safari/Chrome and desktop browsers.",
+        "No clipped marks, accidental translation, reversed strings or screenshot-sourced glyph content."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T059",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + QA",
+      "effort": "M",
+      "title": "Measure performance budgets",
+      "requirements": [
+        "FR-18"
+      ],
+      "dependencies": [
+        "T038",
+        "T057"
+      ],
+      "acceptance_criteria": [
+        "Record test hardware/network and actual LCP/INP/CLS/API latency measurements.",
+        "Investigate oversized bundles, media latency and unnecessary rerenders; do not report unmeasured targets as results."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T060",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Security + engineering",
+      "effort": "M",
+      "title": "Audit logs, frontend bundles and outbound calls",
+      "requirements": [
+        "FR-15",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T051",
+        "T053",
+        "T055"
+      ],
+      "acceptance_criteria": [
+        "No provider secret, password, answer key or private field leaks to child/public responses/logs.",
+        "No ads, tracking pixels, session replay or microphone/camera calls exist in MVP."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T061",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + operations",
+      "effort": "L",
+      "title": "Implement deployment and idempotent workers",
+      "requirements": [
+        "FR-18"
+      ],
+      "dependencies": [
+        "T051",
+        "T053",
+        "T054"
+      ],
+      "acceptance_criteria": [
+        "Document real environment setup, health/readiness, job leases/retries and rollback.",
+        "Production startup validates secrets/policy flags and forbids fixture mode."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T062",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Operations + QA",
+      "effort": "L",
+      "title": "Exercise restore and deletion replay",
+      "requirements": [
+        "FR-15",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T054",
+        "T061"
+      ],
+      "acceptance_criteria": [
+        "Restore an isolated backup and measure actual RPO/RTO outcomes.",
+        "Reapply suppression ledger and verify source pointers/ownership before declaring recovery."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T063",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Rights owner",
+      "effort": "M",
+      "title": "Approve production content rights",
+      "requirements": [
+        "FR-06",
+        "FR-07",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T042",
+        "T045"
+      ],
+      "acceptance_criteria": [
+        "Obtain/document actual source, recording, streaming and distribution permissions.",
+        "Record approved attribution and any caching/offline restrictions; unresolved rights remain blocked."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T064",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Qualified content reviewer",
+      "effort": "L",
+      "title": "Approve pilot curriculum and all mappings",
+      "requirements": [
+        "FR-05",
+        "FR-06",
+        "FR-07",
+        "FR-08",
+        "FR-09",
+        "FR-13"
+      ],
+      "dependencies": [
+        "T045",
+        "T047",
+        "T048",
+        "T063"
+      ],
+      "acceptance_criteria": [
+        "Human reviewer distinct from author checks text/audio/questions and stage sequence.",
+        "Evidence references exact release hashes, not generic approval of the app."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T065",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Privacy/legal owner",
+      "effort": "L",
+      "title": "Approve market, eligibility, consent and retention policy",
+      "requirements": [
+        "FR-01",
+        "FR-02",
+        "FR-15"
+      ],
+      "dependencies": [
+        "T003",
+        "T015",
+        "T052",
+        "T054",
+        "T060"
+      ],
+      "acceptance_criteria": [
+        "Resolve applicable Indonesian 2026 framework and any other launch markets.",
+        "Record signed policy/assurance/processor/notice decisions before enabling child enrollment."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T066",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Design + rights owner",
+      "effort": "M",
+      "title": "Finalize production artwork and missing screen states",
+      "requirements": [
+        "FR-04",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T057",
+        "T058"
+      ],
+      "acceptance_criteria": [
+        "Use licensed/original assets with rights evidence, not whole-screen screenshot slicing.",
+        "Review onboarding/gate/ayah/privacy/admin states and responsive screenshots not supplied as original concepts."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T067",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Product + design + privacy",
+      "effort": "L",
+      "title": "Run supervised usability pilot",
+      "requirements": [
+        "FR-04",
+        "FR-06",
+        "FR-08",
+        "FR-09",
+        "FR-11",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T025",
+        "T064",
+        "T065",
+        "T066"
+      ],
+      "acceptance_criteria": [
+        "Use the approved participant/consent protocol and record actual task observations.",
+        "Assess child navigation and parent interpretation of practice versus memorization without overstating efficacy."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T068",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "QA + engineering",
+      "effort": "L",
+      "title": "Resolve pilot defects and run complete regression",
+      "requirements": [
+        "FR-01",
+        "FR-02",
+        "FR-03",
+        "FR-05",
+        "FR-06",
+        "FR-07",
+        "FR-08",
+        "FR-09",
+        "FR-10",
+        "FR-11",
+        "FR-12",
+        "FR-13",
+        "FR-14",
+        "FR-15",
+        "FR-16",
+        "FR-17",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T059",
+        "T060",
+        "T062",
+        "T067",
+        "T071",
+        "T073",
+        "T074"
+      ],
+      "acceptance_criteria": [
+        "Attach real automated/manual results for the full requirement matrix.",
+        "No unresolved critical/high security issue or known critical content defect remains."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T069",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Operations + product",
+      "effort": "M",
+      "title": "Run production preflight and incident drills",
+      "requirements": [
+        "FR-13",
+        "FR-14",
+        "FR-15",
+        "FR-18"
+      ],
+      "dependencies": [
+        "T061",
+        "T062",
+        "T063",
+        "T064",
+        "T065",
+        "T068"
+      ],
+      "acceptance_criteria": [
+        "Verify deployment, recovery, source recall, export/deletion and incident contacts.",
+        "Confirm no demo records, fake statistics or unapproved source releases are published."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T070",
+      "milestone": "M5",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Product + content + privacy + engineering",
+      "effort": "S",
+      "title": "Record explicit human release decision",
+      "requirements": [
+        "FR-18"
+      ],
+      "dependencies": [
+        "T069"
+      ],
+      "acceptance_criteria": [
+        "Each required owner signs the applicable release gates with evidence.",
+        "Agent reports remaining limits honestly and does not self-authorize public deployment."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T071",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design",
+      "effort": "M",
+      "title": "Build the requested public landing page",
+      "requirements": [
+        "FR-04"
+      ],
+      "dependencies": [
+        "T005",
+        "T012"
+      ],
+      "acceptance_criteria": [
+        "Preserve the user headline and cover all eight feature benefits in responsive layout.",
+        "Parent CTA, privacy/source routes and honest scope do not leak child-mode data."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T072",
+      "milestone": "M2",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering",
+      "effort": "M",
+      "title": "Implement parent starting-stage and session replacement controls",
+      "requirements": [
+        "FR-05",
+        "FR-11"
+      ],
+      "dependencies": [
+        "T027",
+        "T013"
+      ],
+      "acceptance_criteria": [
+        "Only owning gated parent may change starting stage, unlock or replace an active session.",
+        "Overrides do not award completion/rewards and replaced session writes are denied."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T073",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "QA + engineering",
+      "effort": "L",
+      "title": "Test replay, races and reporting invariants",
+      "requirements": [
+        "FR-08",
+        "FR-09",
+        "FR-10",
+        "FR-11"
+      ],
+      "dependencies": [
+        "T021",
+        "T022",
+        "T033",
+        "T038",
+        "T072"
+      ],
+      "acceptance_criteria": [
+        "Run concurrent session/answer/finish/profile-create tests against PostgreSQL.",
+        "Replay, version change, zero denominator, timezone and heartbeat cases retain correct results."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T074",
+      "milestone": "M4",
+      "priority": "P0",
+      "status": "todo",
+      "owner_role": "Engineering + design + QA",
+      "effort": "M",
+      "title": "Complete empty/error/permission/recall UI states",
+      "requirements": [
+        "FR-01",
+        "FR-04",
+        "FR-06",
+        "FR-11",
+        "FR-13",
+        "FR-14",
+        "FR-15",
+        "FR-16",
+        "FR-17"
+      ],
+      "dependencies": [
+        "T031",
+        "T035",
+        "T049",
+        "T053",
+        "T056",
+        "T071"
+      ],
+      "acceptance_criteria": [
+        "Every data screen has tested loading, empty, denied, expired and recoverable-error behavior.",
+        "Child content recall/offline paths and parent privacy-job failures remain safe and understandable."
+      ],
+      "evidence_required": [
+        "Implemented behavior and changed files",
+        "Tests/commands actually executed and results",
+        "Relevant screenshots or human approval record"
+      ],
+      "evidence": []
+    }
+  ]
+}

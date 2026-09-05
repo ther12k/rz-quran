@@ -1,0 +1,33 @@
+{
+  "name": "rz-quran-kids",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c green,blue \"bun run --filter @rzq/api dev\" \"bun run --filter @rzq/web dev\"",
+    "dev:api": "bun run --filter @rzq/api dev",
+    "dev:web": "bun run --filter @rzq/web dev",
+    "build": "bun run --filter @rzq/contracts build && bun run --filter @rzq/database build && bun run --filter @rzq/api build && bun run --filter @rzq/web build",
+    "lint": "bun run --filter '*' lint",
+    "typecheck": "tsc -p apps/api/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
+    "test": "bun run test:contracts && bun run test:unit && bun run test:integration",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:contracts": "vitest run --project contracts",
+    "test:e2e": "playwright test -c tests/e2e/playwright.config.ts",
+    "test:security": "vitest run --project security",
+    "db:generate": "bun run --filter @rzq/database generate",
+    "db:migrate": "bun run --filter @rzq/database migrate",
+    "db:seed:demo": "bun run --filter @rzq/database seed:demo",
+    "worker": "bun run --filter @rzq/api worker",
+    "check:production-readiness": "bun run --filter @rzq/api check:production-readiness"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.2"
+  }
+}

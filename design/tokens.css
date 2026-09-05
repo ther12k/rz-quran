@@ -1,0 +1,25 @@
+/* Proposed tokens. Font families are candidates, not bundled files. */
+:root {
+  --color-primary: #157f43; --color-primary-hover: #106335;
+  --color-ink: #17312b; --color-muted: #54675e;
+  --color-page: #fbfcf7; --color-surface: #fff; --color-border: #dee8dd;
+  --color-mint: #eaf6e8; --color-lavender: #f2edfb;
+  --color-blue: #eaf2fe; --color-yellow: #fff6d9;
+  --color-error: #ac3030; --color-focus: #184bb5;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-small: 16px; --radius-card: 24px; --radius-pill: 999px;
+  --touch-min: 48px; --button-min: 52px;
+  --content-max: 1120px; --activity-max: 680px;
+  --font-latin: 'Nunito', system-ui, sans-serif;
+  --font-arabic: 'Noto Naskh Arabic', serif;
+}
+.quran-text {
+  direction: rtl; font-family: var(--font-arabic); font-size: 2.25rem;
+  line-height: 1.9; letter-spacing: normal; word-spacing: normal;
+  overflow: visible; /* Do not crop combining marks. Set lang=ar and translate=no in markup. */
+}
+:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .nonessential-motion { animation: none !important; transition: none !important; }
+}

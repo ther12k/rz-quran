@@ -1,0 +1,192 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "demo_only": {
+      "type": "boolean"
+    },
+    "source_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "quran_text",
+        "quran_audio",
+        "hijaiyah_audio",
+        "translation",
+        "illustration",
+        "lesson_notes"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "source_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "upstream_reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "acquired_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "rights_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied",
+        "revoked"
+      ]
+    },
+    "permitted_uses": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "display",
+          "streaming",
+          "redistribution",
+          "offline"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "license_reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 1000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "attribution": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "evidence_object_key": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reviewer_reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "raw_object_key": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "raw_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "demo_only",
+    "source_id",
+    "source_kind",
+    "title",
+    "source_version",
+    "upstream_reference",
+    "acquired_at",
+    "rights_status",
+    "permitted_uses",
+    "license_reference",
+    "attribution",
+    "evidence_object_key",
+    "reviewer_reference",
+    "raw_object_key",
+    "raw_sha256"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/rz-quran-kids/content-manifest.schema.json",
+  "title": "Source registry manifest, not legal approval",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "rights_status": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "rights_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "license_reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_object_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewer_reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "raw_object_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "raw_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  ]
+}

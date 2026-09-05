@@ -1,0 +1,359 @@
+[
+  {
+    "id": "S01",
+    "title": "Public landing",
+    "area": "public",
+    "route": "/",
+    "concept_image": "mockups/01-home.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S02",
+    "title": "Adult authentication",
+    "area": "public",
+    "route": "/masuk",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S03",
+    "title": "Consent and eligibility",
+    "area": "parent",
+    "route": "/orang-tua/persetujuan",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S04",
+    "title": "Create/select child",
+    "area": "parent",
+    "route": "/orang-tua/anak",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S05",
+    "title": "Child home",
+    "area": "child",
+    "route": "/anak/beranda",
+    "concept_image": "mockups/01-home.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S06",
+    "title": "Catalog/path",
+    "area": "child",
+    "route": "/anak/belajar",
+    "concept_image": "mockups/02-learning-catalog.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S07",
+    "title": "Listen and imitate",
+    "area": "child",
+    "route": "/anak/belajar/:lessonId",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S08",
+    "title": "Short-surah list",
+    "area": "child",
+    "route": "/anak/belajar?type=surah",
+    "concept_image": "mockups/03-short-surah-practice.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S09",
+    "title": "Ayah practice",
+    "area": "child",
+    "route": "/anak/surat/:lessonId",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S10",
+    "title": "Main hub",
+    "area": "child",
+    "route": "/anak/main",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S11",
+    "title": "Quiz",
+    "area": "child",
+    "route": "/anak/kuis/:lessonId",
+    "concept_image": "mockups/04-interactive-quiz.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S12",
+    "title": "Game",
+    "area": "child",
+    "route": "/anak/permainan/:lessonId",
+    "concept_image": "mockups/05-hijaiyah-game.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S13",
+    "title": "Achievements",
+    "area": "child",
+    "route": "/anak/prestasi",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S14",
+    "title": "Child profile",
+    "area": "child",
+    "route": "/anak/profil",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S15",
+    "title": "Parent gate",
+    "area": "adult_session",
+    "route": "/gerbang-orang-tua",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S16",
+    "title": "Parent progress",
+    "area": "parent",
+    "route": "/orang-tua/anak/:childId/progres",
+    "concept_image": "mockups/06-parent-progress.png",
+    "additional_visual_design_needed": false,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S17",
+    "title": "Assessment/settings",
+    "area": "parent",
+    "route": "/orang-tua/anak/:childId/pengaturan",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S18",
+    "title": "Privacy/help",
+    "area": "parent",
+    "route": "/orang-tua/data",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S19",
+    "title": "Source/assets",
+    "area": "staff",
+    "route": "/admin/sumber",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S20",
+    "title": "Lesson/review",
+    "area": "staff",
+    "route": "/admin/pelajaran/:versionId",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  },
+  {
+    "id": "S21",
+    "title": "Publish/recall",
+    "area": "staff",
+    "route": "/admin/rilis",
+    "concept_image": null,
+    "additional_visual_design_needed": true,
+    "required_states": [
+      "loading",
+      "ready",
+      "empty",
+      "error",
+      "denied",
+      "expired"
+    ],
+    "status": "Specified, not implemented"
+  }
+]

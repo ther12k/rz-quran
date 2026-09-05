@@ -1,0 +1,324 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "demo_only": {
+      "type": "boolean"
+    },
+    "lesson_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "lesson_type": {
+      "type": "string",
+      "enum": [
+        "listening",
+        "surah",
+        "quiz",
+        "game"
+      ]
+    },
+    "stage_key": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "estimated_minutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 15
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Unit"
+      },
+      "minItems": 1,
+      "maxItems": 100
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Question"
+      },
+      "maxItems": 100
+    }
+  },
+  "required": [
+    "schema_version",
+    "demo_only",
+    "lesson_id",
+    "version_id",
+    "version_number",
+    "title",
+    "lesson_type",
+    "stage_key",
+    "estimated_minutes",
+    "source_ids",
+    "units",
+    "questions"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/rz-quran-kids/lesson.schema.json",
+  "title": "Server-side lesson authoring payload",
+  "description": "Authoring/import only. Contains answer keys. Never serialize this entire object to child/public clients. Truth, rights and cross-reference checks are additional publication gates.",
+  "$defs": {
+    "VerseRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "verse_key": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,2}:[1-9][0-9]{0,2}$"
+        }
+      },
+      "required": [
+        "source_id",
+        "verse_key"
+      ]
+    },
+    "Option": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "option_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,31}$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      },
+      "required": [
+        "option_id",
+        "label"
+      ]
+    },
+    "Unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "unit_type": {
+          "type": "string",
+          "enum": [
+            "instruction",
+            "letter",
+            "ayah",
+            "choice"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "letter": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "verse_ref": {
+          "$ref": "#/$defs/VerseRef"
+        },
+        "audio_asset_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "question_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "unit_id",
+        "ordinal",
+        "unit_type",
+        "required",
+        "instruction",
+        "audio_asset_id"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "unit_type": {
+                "const": "letter"
+              }
+            },
+            "required": [
+              "unit_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "letter"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "unit_type": {
+                "const": "ayah"
+              }
+            },
+            "required": [
+              "unit_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "verse_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "unit_type": {
+                "const": "choice"
+              }
+            },
+            "required": [
+              "unit_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "question_id"
+            ]
+          }
+        }
+      ]
+    },
+    "Question": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "unit_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Option"
+          },
+          "minItems": 2,
+          "maxItems": 4
+        },
+        "correct_option_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,31}$"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "question_id",
+        "unit_id",
+        "prompt",
+        "options",
+        "correct_option_id",
+        "explanation",
+        "source_ids"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "lesson_type": {
+            "enum": [
+              "quiz",
+              "game"
+            ]
+          }
+        },
+        "required": [
+          "lesson_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "questions": {
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "units": {
+            "minItems": 5,
+            "maxItems": 5
+          }
+        }
+      }
+    }
+  ]
+}
