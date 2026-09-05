@@ -1,5 +1,5 @@
 {
-  "measured_at": "2026-09-05T08:53:27.184Z",
+  "measured_at": "2026-09-05T10:57:14.701Z",
   "profile": {
     "viewport": "390x844 @2x (mobile emulation)",
     "cpuThrottle": "4x",
@@ -13,8 +13,8 @@
     "cls": 0.1
   },
   "measured": {
-    "lcp_ms": 1656,
-    "inp_ms": 41,
+    "lcp_ms": 1132,
+    "inp_ms": 35,
     "inp_note": "interaction timing",
     "cls": 0
   }

@@ -36,6 +36,13 @@ Raw data: `evidence/perf-api-latency.json`.
 
 `bun run --filter @rzq/web build` → **99.77 KB gzipped JS** (budget ≤ 250 KB compressed, excluding on-demand media/fonts). PASS.
 
+## Measurement conditions (reproducibility)
+
+- **Dataset at measurement time (dev DB):** 14 published lesson versions, 25 canonical verses (5 surahs), 1 child profile with single-digit learning events — small demo scale; timings do not project to production data volumes.
+- **Cache state:** fresh Playwright browser context per run (cold HTTP cache; dev server, no service worker); API bench used pre-established authenticated sessions, single Bun process, PostgreSQL pool per worker.
+- **Run structure:** web vitals — one instrumented run per viewport project (5 viewports) on `/anak/beranda`, PerformanceObserver samples (INP via input→next-rAF proxy: headless Chromium omits Event Timing `interactionId`); API bench — 50 concurrent workers, 300 samples total, zero errors. Raw JSON: `evidence/perf-web-vitals.json`, `evidence/perf-api-latency.json`.
+- **Scope label:** laboratory (scripted) measurements under the emulated profile above — not field/RUM data. No real-user telemetry exists (and none is permitted for children).
+
 ## Not measured here (honest gaps)
 
 - Production-region LCP/INP/CLS behind a real CDN with self-hosted fonts.

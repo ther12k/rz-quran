@@ -451,6 +451,20 @@ export function adminModule(bindings: () => AppBindings) {
           .update(schema.learningSessions)
           .set({ status: "recalled" })
           .where(and(eq(schema.learningSessions.versionId, versionId), sql`status in ('active', 'paused')`));
+
+        // Block new media authorization for this version's audio, unless the
+        // asset is still referenced by another published version (shared asset).
+        await tx.execute(sql`
+          UPDATE media_assets SET status = 'blocked'
+          WHERE id IN (
+            SELECT audio_asset_id FROM lesson_units
+            WHERE version_id = ${versionId} AND audio_asset_id IS NOT NULL
+          ) AND NOT EXISTS (
+            SELECT 1 FROM lesson_units lu
+            JOIN lesson_versions lv ON lv.id = lu.version_id AND lv.status = 'published'
+            WHERE lu.audio_asset_id = media_assets.id
+          )
+        `);
       });
 
       await recordAuditEvent(b, staff.authUserId, "recall_lesson", "lesson", params.lessonId, "success", {

@@ -5,7 +5,7 @@
 // - T034: 5-question Quiz UI with instant feedback and retries
 // - T035: Sound-matching 5-round game
 // - T040: Soft session goals & rest suggestions
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api, ApiError, type SessionDto } from "../api.ts";
@@ -39,6 +39,7 @@ export function LessonPlayerPage({ onChanged }: { onChanged: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<null | { star: boolean }>(null);
   const seqRef = useRef<number | null>(null);
+  const resumedRef = useRef(false);
 
   const units = useMemo(() => lesson.data?.units ?? [], [lesson.data]);
   const current = units[index];
@@ -99,10 +100,51 @@ export function LessonPlayerPage({ onChanged }: { onChanged: () => void }) {
     onError: (e) => setError(e instanceof ApiError ? e.message : "Gagal menyelesaikan latihan."),
   });
 
+  // A different lesson still has an active session (one writable session per
+  // child). Offer an honest resume path instead of a generic error.
+  const sessionInUse = session.error instanceof ApiError && session.error.code === "SESSION_IN_USE";
+  const activeSession = useQuery({
+    queryKey: ["learning-current"],
+    queryFn: () => api.currentSession(),
+    enabled: sessionInUse,
+  });
+  // On first load of a resumed session, jump to the first unfinished unit.
+  useEffect(() => {
+    if (resumedRef.current || !sessionData || units.length === 0) return;
+    resumedRef.current = true;
+    const completed = new Set(sessionData.completed_unit_ids);
+    const firstIncomplete = units.findIndex((u) => !completed.has(u.unit_id));
+    if (firstIncomplete > 0) setIndex(firstIncomplete);
+  }, [sessionData, units]);
+
   if (lesson.isPending || session.isPending) {
     return (
       <ChildShell activeTab="belajar">
         <p className="p-6 text-muted font-bold text-center">Sedang menyiapkan materi…</p>
+      </ChildShell>
+    );
+  }
+  if (sessionInUse) {
+    const resumeLessonId = activeSession.data?.session?.lesson_id;
+    return (
+      <ChildShell activeTab="belajar">
+        <main className="mx-auto max-w-[680px] px-4 py-6">
+          <Card className="py-8 text-center">
+            <span className="text-[40px]" aria-hidden="true">📖</span>
+            <h1 className="mt-2 text-[20px] font-extrabold text-ink">Masih ada latihan yang belum selesai</h1>
+            <p className="mt-2 text-[15px] text-muted max-w-md mx-auto">
+              Selesaikan dulu latihan yang sedang berjalan, ya. Satu latihan aktif setiap saat supaya proses belajarmu tercatat dengan rapi.
+            </p>
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              {resumeLessonId ? (
+                <Button onClick={() => navigate(`/anak/belajar/${resumeLessonId}`)}>Lanjutkan Latihan</Button>
+              ) : null}
+              <Link to="/anak/belajar">
+                <Button variant="secondary">Lihat Materi Lain</Button>
+              </Link>
+            </div>
+          </Card>
+        </main>
       </ChildShell>
     );
   }

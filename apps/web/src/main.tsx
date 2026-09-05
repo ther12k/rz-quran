@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router";
 import { api, ApiError, type Me } from "./api.ts";
 import { LandingPage } from "./pages/landing.tsx";
 import { AuthPage } from "./pages/auth.tsx";
@@ -13,6 +13,13 @@ import { GatePage } from "./pages/gate.tsx";
 import { ParentProgressPage } from "./pages/parent-progress.tsx";
 import { AdminWorkspacePage } from "./pages/admin.tsx";
 import "./styles.css";
+
+// Remount the player when the lesson param changes so step index and
+// per-lesson state reset cleanly (e.g. switching to an active session).
+function LessonPlayerRoute({ onChanged }: { onChanged: () => void }) {
+  const { lessonId = "" } = useParams();
+  return <LessonPlayerPage key={lessonId} onChanged={onChanged} />;
+}
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: false, refetchOnWindowFocus: false, staleTime: 5_000 } },
@@ -83,7 +90,7 @@ function ModeRouter() {
         <Routes>
           <Route path="/anak/beranda" element={<ChildHomePage onExit={refreshMe} />} />
           <Route path="/anak/belajar" element={<CatalogPage />} />
-          <Route path="/anak/belajar/:lessonId" element={<LessonPlayerPage onChanged={refreshMe} />} />
+          <Route path="/anak/belajar/:lessonId" element={<LessonPlayerRoute onChanged={refreshMe} />} />
           <Route path="/anak/*" element={<Navigate to="/anak/beranda" replace />} />
         </Routes>
       );

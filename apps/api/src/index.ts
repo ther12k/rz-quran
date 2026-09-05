@@ -55,6 +55,20 @@ export function buildApp(
           error: { code: error.code, message: error.message, request_id: currentRequestId, details: error.details },
         };
       }
+      // Elysia framework errors (NotFoundError, ValidationError, ...) carry an
+      // HTTP status; surface it instead of masking 404/422 as 500.
+      const httpStatus = (error as { status?: unknown }).status;
+      if (typeof httpStatus === "number" && httpStatus >= 400 && httpStatus < 500) {
+        set.status = httpStatus;
+        const code = (error as { code?: unknown }).code;
+        return {
+          error: {
+            code: typeof code === "string" && code ? code : "HTTP_ERROR",
+            message: "Permintaan tidak dikenal atau tidak valid.",
+            request_id: currentRequestId,
+          },
+        };
+      }
       console.error("[api] unhandled error", error);
       set.status = 500;
       return {

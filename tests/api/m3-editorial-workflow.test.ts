@@ -207,6 +207,28 @@ describe("M3 Editorial Workflow & Governance", () => {
     expect(sessionEventRes.status).toBe(410); // 410 CONTENT_RECALLED!
     expect(sessionEventRes.json.error.code).toBe("CONTENT_RECALLED");
 
+    // Recall enforcement surfaces beyond the active session (acceptance
+    // reconciliation): publication visibility, lesson detail, new sessions,
+    // and new media authorization must all refuse recalled content.
+    const catalogAfterRecall = await studentParent.call("GET", "/api/v1/catalog");
+    expect(catalogAfterRecall.status).toBe(200);
+    expect(catalogAfterRecall.json.items.some((i: any) => i.lesson_id === lessonId)).toBe(false);
+
+    const lessonAfterRecall = await studentParent.call("GET", `/api/v1/lessons/${lessonId}`);
+    expect(lessonAfterRecall.status).toBe(404);
+    expect(lessonAfterRecall.json.error.code).toBe("NOT_FOUND");
+
+    const newSessionAfterRecall = await studentParent.call("POST", "/api/v1/learning/sessions", {
+      body: { lesson_id: lessonId },
+      idempotencyKey: crypto.randomUUID(),
+    });
+    expect(newSessionAfterRecall.status).toBe(404);
+    expect(newSessionAfterRecall.json.error.code).toBe("NOT_FOUND");
+
+    const mediaAfterRecall = await studentParent.call("GET", `/api/v1/media/${assetId}/playback`);
+    expect(mediaAfterRecall.status).toBe(503);
+    expect(mediaAfterRecall.json.error.code).toBe("MEDIA_UNAVAILABLE");
+
     // 7. T048: Parent content report
     const reportRes = await studentParent.call("POST", "/api/v1/parent/content-reports", {
       body: {

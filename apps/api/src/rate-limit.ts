@@ -13,9 +13,28 @@ export async function checkRateLimit(
   limit: number,
   windowSec: number,
 ): Promise<BucketResult> {
+  const count = await currentHitCount(db, bucketKey, windowSec);
+  if (count >= limit) {
+    return { allowed: false, retryAfterSec: windowSec };
+  }
+  await recordRateLimitHit(db, bucketKey, windowSec);
+  return { allowed: true, retryAfterSec: 0 };
+}
+
+async function currentHitCount(db: Database, bucketKey: string, windowSec: number): Promise<number> {
+  const result = await db.execute(sql`
+    SELECT hit_count FROM rate_limit_buckets
+    WHERE bucket_key = ${bucketKey}
+      AND window_start = to_timestamp(floor(extract(epoch from now()) / ${windowSec}) * ${windowSec})
+  `);
+  const rows = (result as unknown as { hit_count?: number }[]) ?? [];
+  return rows[0]?.hit_count ?? 0;
+}
+
+export async function recordRateLimitHit(db: Database, bucketKey: string, windowSec: number): Promise<void> {
   // Fixed aligned windows: bucket key + window start form the PK, so each
   // window gets a fresh row and counts accumulate within the window.
-  const result = await db.execute(sql`
+  await db.execute(sql`
     WITH window_start_ts AS (
       SELECT to_timestamp(floor(extract(epoch from now()) / ${windowSec}) * ${windowSec}) AS ws
     ), upsert AS (
@@ -27,12 +46,6 @@ export async function checkRateLimit(
     )
     SELECT hit_count FROM upsert
   `);
-  const rows = (result as unknown as { hit_count?: number }[]) ?? [];
-  const count = rows[0]?.hit_count ?? 1;
-  if (count > limit) {
-    return { allowed: false, retryAfterSec: windowSec };
-  }
-  return { allowed: true, retryAfterSec: 0 };
 }
 
 export const RATE_LIMITS = {
@@ -50,4 +63,15 @@ export async function enforceRateLimit(
   if (!res.allowed) {
     throw new ApiError("RATE_LIMITED", "Terlalu banyak percobaan. Tunggu sebentar, ya.");
   }
+}
+
+// Read-only budget check for limits that must count only failures (gate):
+// blocks when the failure bucket is full without consuming a slot.
+export async function checkRateLimitPeek(
+  db: Database,
+  bucketKey: string,
+  family: { limit: number; windowSec: number },
+): Promise<boolean> {
+  const count = await currentHitCount(db, bucketKey, family.windowSec);
+  return count < family.limit;
 }

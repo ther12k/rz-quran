@@ -183,3 +183,23 @@ describe("M1 end-to-end safe slice", () => {
     expect(report.json.estimated_active_ms).toBe(0);
   });
 });
+
+describe("HTTP error mapping", () => {
+  it("returns 404 for unknown routes instead of masking as 500", async () => {
+    const client = makeClient(app.app, app.baseUrl);
+    const res = await client.call("GET", "/api/does-not-exist");
+    expect(res.status).toBe(404);
+    expect(res.json.error.code).toBe("NOT_FOUND");
+    expect(res.json.error.request_id).toBeTruthy();
+  });
+
+  it("serves health and readiness probes", async () => {
+    const client = makeClient(app.app, app.baseUrl);
+    const health = await client.call("GET", "/healthz");
+    expect(health.status).toBe(200);
+    expect(health.json.status).toBe("ok");
+    const ready = await client.call("GET", "/readyz");
+    expect(ready.status).toBe(200);
+    expect(ready.json.status).toBe("ready");
+  });
+});

@@ -7,7 +7,7 @@ import { gateRequestSchema } from "@rzq/contracts";
 import { ApiError } from "../errors.ts";
 import { resolveContext, requireAdultSession, type AppBindings } from "./context.ts";
 import { verifyPasswordForUser } from "../auth.ts";
-import { enforceRateLimit, RATE_LIMITS } from "../rate-limit.ts";
+import { checkRateLimitPeek, recordRateLimitHit, RATE_LIMITS } from "../rate-limit.ts";
 
 export const GATE_DURATION_MS = 5 * 60 * 1000;
 
@@ -105,12 +105,19 @@ export function identityModule(bindings: () => AppBindings) {
         };
       }
       // T055: 5 failed gate attempts per account per 15-minute window.
-      await enforceRateLimit(b.db, RATE_LIMITS.gateAttempt, `gate:${ctx.parent.id}`);
+      // Only failures consume the budget: a parent legitimately toggling
+      // between child mode and the parent area (S15) unlocks repeatedly.
+      const gateBucket = `gate:${ctx.parent.id}`;
+      const allowed = await checkRateLimitPeek(b.db, gateBucket, RATE_LIMITS.gateAttempt);
+      if (!allowed) {
+        throw new ApiError("RATE_LIMITED", "Terlalu banyak percobaan. Tunggu sebentar, ya.");
+      }
       // Gate unlock is valid from BOTH modes: returning from child mode to
       // the parent area requires exactly this reauthentication (S15, FR-03).
       // Entering child mode clears the gate; unlocking sets mode=parent.
       const ok = await verifyPasswordForUser(b.db, ctx.authUserId, parsed.data.password);
       if (!ok) {
+        await recordRateLimitHit(b.db, gateBucket, RATE_LIMITS.gateAttempt.windowSec);
         set.status = 401;
         return {
           error: {

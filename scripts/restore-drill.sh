@@ -5,9 +5,11 @@
 #   1. ensure a sacrificial child profile exists on the live DB
 #   2. take the backup (child still present)
 #   3. delete the child on live (suppression-ledger row written)
-#   4. restore the pre-deletion backup into an isolated DB (child resurrects)
-#   5. RE-APPLY the live suppression ledger onto the restored copy (runbook step)
-#   6. verify-restore.ts must detect and re-delete the resurrected profile
+#   4. take a STANDALONE single-table ledger backup (the "next scheduled
+#      ledger export" — an artifact independent of the full DB backup)
+#   5. restore the pre-deletion backup into an isolated DB (child resurrects)
+#   6. restore the standalone ledger artifact onto the recovered copy and
+#      run verify-restore.ts: it must detect and re-delete the profile
 # Measures dump/restore/read times (RTO components) and the RPO window.
 set -euo pipefail
 
@@ -61,6 +63,16 @@ SQL
 fi
 psql "$SRC_URL" -tAc "SELECT id||'|'||scope||'|'||reference_key||'|'||reason||'|'||requested_by FROM deletion_suppressions" > "$LEDGER_SNAPSHOT"
 
+# --- 3.5 Standalone ledger artifact (independent of the full backup) ------------
+# Models the scheduled off-database ledger export: recoverable even if the
+# primary environment is lost, and re-appliable onto any restored copy.
+LEDGER_DUMP=/tmp/rzq-drill/ledger.dump
+docker exec rzq-kids-db pg_dump -U rzq -Fc --table deletion_suppressions "$SRC_DB" > "$LEDGER_DUMP"
+LEDGER_DUMP_BYTES=$(stat -c%s "$LEDGER_DUMP")
+
+# Dataset scale (defines what the measured timings cover)
+SCALE="$(psql "$SRC_URL" -tAc "SELECT 'children='||(SELECT count(*) FROM children)||' events='||(SELECT count(*) FROM learning_events)||' versions='||(SELECT count(*) FROM lesson_versions)||' ledger='||(SELECT count(*) FROM deletion_suppressions)")"
+
 # --- 4. Restore the pre-deletion backup into an isolated DB --------------------
 psql "$ADMIN_URL" -c "CREATE DATABASE \"${DRILL_DB}\"" >/dev/null
 T2=$(date +%s%3N)
@@ -71,11 +83,12 @@ DRILL_URL="${ADMIN_URL%/postgres}/${DRILL_DB}"
 
 RESURRECTED_COUNT="$(psql "$DRILL_URL" -tAc "SELECT count(*) FROM children WHERE id='${SACR_ID}'")"
 
-# --- 5. Re-apply the live suppression ledger onto the restored copy ------------
-while IFS='|' read -r id scope ref reason reqby; do
-  [ -z "$id" ] && continue
-  psql "$DRILL_URL" -q -c "INSERT INTO deletion_suppressions (id, scope, reference_key, reason, requested_by) VALUES ('$id','$scope','$ref','$reason','$reqby') ON CONFLICT (id) DO NOTHING" 2>/dev/null || true
-done < "$LEDGER_SNAPSHOT"
+# --- 5. Restore the standalone ledger artifact onto the recovered copy ----------
+# The artifact is the authoritative post-deletion ledger; replace the
+# recovered (stale, pre-deletion) ledger with it, then verify replay.
+psql "$DRILL_URL" -q -c "TRUNCATE deletion_suppressions"
+docker exec -i rzq-kids-db pg_restore -U rzq -d "$DRILL_DB" --no-owner --data-only --table deletion_suppressions < "$LEDGER_DUMP"
+LEDGER_RESTORED_COUNT="$(psql "$DRILL_URL" -tAc "SELECT count(*) FROM deletion_suppressions")"
 
 # --- 6. Verification + suppression replay on the restored copy ------------------
 if OUTPUT="$(bun packages/database/src/verify-restore.ts "$DRILL_URL" 2>&1)"; then
@@ -99,9 +112,12 @@ POST_LEDGER_COUNT="$(psql "$DRILL_URL" -tAc "SELECT count(*) FROM children WHERE
   echo ""
   echo "- **Date:** ${STAMP}"
   echo "- **Scope:** local isolated drill (docker PostgreSQL 16; \`${SRC_DB}\` → \`${DRILL_DB}\`)"
+  echo "- **Dataset scale:** ${SCALE}"
   echo "- **Backup:** ${DUMP_BYTES} bytes (custom format, pre-deletion)"
+  echo "- **Independent ledger artifact:** single-table pg_dump, ${LEDGER_DUMP_BYTES} bytes (post-deletion export); restored standalone into the recovered copy; ${LEDGER_RESTORED_COUNT} suppression row(s) applied from the artifact"
   echo "- **Resurrection exercised:** ${SACRIFICIAL}; resurrected in restored copy: ${RESURRECTED_COUNT}; remaining after ledger replay: ${POST_LEDGER_COUNT}"
   echo "- **Measured RTO (local scale):** dump ${DUMP_MS} ms + restore ${RESTORE_MS} ms + first verified read ${SMOKE_MS} ms = **${RTO_TOTAL_MS} ms**"
+  echo "  - Timer boundaries: pg_dump start → pg_restore end → first verified SQL read. Excludes container provisioning, network/DNS, app process restart and full service-level smoke."
   echo "- **RPO:** bounded by backup schedule; last pre-dump row: ${LAST_ROW_BEFORE}"
   echo "- **Verification:** ${VERIFY}"
   echo ""
@@ -109,7 +125,7 @@ POST_LEDGER_COUNT="$(psql "$DRILL_URL" -tAc "SELECT count(*) FROM children WHERE
   echo "$OUTPUT"
   echo '```'
   echo ""
-  echo "_Local-scale drill evidence. Production-scale drill (real infra, off-site copy) re-runs post-D09._"
+  echo "_Local-scale drill evidence. Honest limits: artifacts live on the same host as the database (off-site copy requires real infrastructure, not authorized in this environment); recovery verification is SQL-level, not a full end-to-end service drill; production-scale drill re-runs post-D09._"
 } > "$OUT"
 
 # --- Cleanup (drop drill DB; ledger row on live remains as drill evidence) ------

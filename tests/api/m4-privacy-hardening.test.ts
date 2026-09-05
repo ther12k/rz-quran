@@ -136,6 +136,22 @@ describe("T055: gate rate limiting", () => {
     }
     expect(lastStatus).toBe(429);
   });
+
+  it("successful unlocks do not consume the failure budget (S15 toggle flow)", async () => {
+    const { parent } = await setupFamily("ratelimit-ok@example.com", "Anak RL2");
+    // A parent toggling child/parent areas unlocks far more than 5 times in
+    // 15 minutes; every unlock must succeed.
+    for (let i = 0; i < 8; i++) {
+      const res = await parent.call("POST", "/api/v1/parent/gate", { body: { password: "kata-sandi-aman-123" } });
+      expect(res.status).toBe(200);
+    }
+    // Failures still count: after 5 wrong passwords the next attempt blocks.
+    for (let i = 0; i < 5; i++) {
+      await parent.call("POST", "/api/v1/parent/gate", { body: { password: "salah-banget-123" } });
+    }
+    const blocked = await parent.call("POST", "/api/v1/parent/gate", { body: { password: "kata-sandi-aman-123" } });
+    expect(blocked.status).toBe(429);
+  });
 });
 
 describe("T073: concurrency invariants on real PostgreSQL", () => {
