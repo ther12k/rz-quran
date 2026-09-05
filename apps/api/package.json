@@ -9,7 +9,8 @@
     "worker": "bun src/jobs/worker.ts",
     "build": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "check:production-readiness": "bun src/check-production-readiness.ts"
+    "check:production-readiness": "bun src/check-production-readiness.ts",
+    "preflight": "bun src/preflight.ts"
   },
   "dependencies": {
     "@rzq/contracts": "workspace:*",

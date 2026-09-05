@@ -15,6 +15,20 @@
       "when": 1788578252832,
       "tag": "0001_moaning_rafael_vega",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788593831353,
+      "tag": "0002_omniscient_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788594014372,
+      "tag": "0003_neat_cable",
+      "breakpoints": true
     }
   ]
 }

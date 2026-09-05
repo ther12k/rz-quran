@@ -11,6 +11,7 @@ import { CatalogPage } from "./pages/catalog.tsx";
 import { LessonPlayerPage } from "./pages/lesson-player.tsx";
 import { GatePage } from "./pages/gate.tsx";
 import { ParentProgressPage } from "./pages/parent-progress.tsx";
+import { AdminWorkspacePage } from "./pages/admin.tsx";
 import "./styles.css";
 
 const queryClient = new QueryClient({
@@ -108,6 +109,11 @@ function ModeRouter() {
     return <OnboardingPage stage="children" onDone={refreshMe} />;
   }
 
+  // Staff Admin Area
+  if (path.startsWith("/admin")) {
+    return <AdminWorkspacePage />;
+  }
+
   if (path.startsWith("/masuk") || path.startsWith("/daftar")) {
     return <AuthPage stage="signin" onDone={refreshMe} />;
   }
@@ -125,3 +131,13 @@ createRoot(document.getElementById("root")!).render(
     </QueryClientProvider>
   </StrictMode>,
 );
+
+// T056: installable shell. Service worker caches ONLY the static shell;
+// /api/* and media are never intercepted (FR-16).
+if ("serviceWorker" in navigator && import.meta.env.PROD) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {
+      // Registration failure is non-fatal; the app remains fully usable online.
+    });
+  });
+}

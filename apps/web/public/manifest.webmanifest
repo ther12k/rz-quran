@@ -1,0 +1,10 @@
+{
+  "name": "RZ Qur'an Kids",
+  "short_name": "RZ Qur'an Kids",
+  "description": "Belajar Al-Qur'an untuk anak bersama orang tua (mode demo non-produksi).",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FBFCF7",
+  "theme_color": "#157F43",
+  "icons": []
+}

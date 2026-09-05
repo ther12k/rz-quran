@@ -9,6 +9,8 @@ import { identityModule } from "./modules/identity.ts";
 import { familiesModule } from "./modules/families.ts";
 import { learningModule } from "./modules/learning.ts";
 import { reportingModule } from "./modules/reporting.ts";
+import { adminModule } from "./modules/admin.ts";
+import { privacyModule } from "./modules/privacy.ts";
 import type { AppBindings } from "./modules/context.ts";
 import type { Database } from "@rzq/database";
 
@@ -75,7 +77,9 @@ export function buildApp(
     .use(identityModule(bindings))
     .use(familiesModule(bindings))
     .use(learningModule(bindings))
-    .use(reportingModule(bindings));
+    .use(reportingModule(bindings))
+    .use(adminModule(bindings))
+    .use(privacyModule(bindings));
 
   return { app, env, db, auth, bindings };
 }

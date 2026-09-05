@@ -2,11 +2,24 @@
 
 A mobile-first, Indonesian-language Qur'an learning experience for children, with a separate parent area and a small content-management workspace. **Working name, not a confirmed brand.** This is the children's learning product from the RZ-Quran-Kids handoff — *not* the separate AI Fiqh chatbot.
 
-> **Status: implementation in progress (M0/M1).** This repository contains no deployed product, no licensed recitation library, no approved curriculum and no legal sign-off. All learning content is clearly marked non-production demo fixture data (Hijaiyah letters only, no Qur'an verse text, no audio). **Public launch stays blocked** until content-rights, curriculum and privacy approvals are recorded (see `docs/11_DECISIONS_AND_OPEN_QUESTIONS.md`). Nothing in this repo should be read as a claim of educational efficacy or legal compliance.
+> **Status: M0–M4 implemented and tested; M5 tooling delivered. Public launch blocked on human approvals.** This repository contains no deployed product, no licensed recitation library, no approved curriculum and no legal sign-off. All learning content is clearly marked non-production demo fixture data (Hijaiyah letters only, no Qur'an verse text, no audio). **Public launch stays blocked** until content-rights, curriculum and privacy approvals are recorded (see `docs/11_DECISIONS_AND_OPEN_QUESTIONS.md`). Nothing in this repo should be read as a claim of educational efficacy or legal compliance.
+
+## Milestone status (2026-09-05)
+
+| Milestone | Issues | State |
+| --- | --- | --- |
+| M0 Foundations | 10/10 closed | Repo assessment, compatibility record, threat model, tokens, contracts, migrations, guarded fixtures, CI |
+| M1 Safe slice | 15/15 closed | Auth, gate/child-mode, consent, profiles, learning engine, parent report, E2E + responsive screenshots |
+| M2 Learning experience | 17/17 closed | Catalog search/filters, DAG stages, audio controller, media delivery, 5 short surahs (Tanzil text), quiz + sound game, assessments, comfort settings |
+| M3 Content operations | 11/11 closed | Source/rights registry, asset quarantine + worker, two-person review (self-review blocked), release hashing, instant recall, content reports, audit trail, admin UI |
+| M4 Privacy & hardening | 10 closed / 3 open | Withdrawal, export, deletion + suppression ledger, rate limiting, service worker, a11y/Arabic verification. Open: T059 (field perf), T060 (CI scans), T062 (restore drill) — need real environments |
+| M5 Pilot & launch | 1 closed / 7 open | Preflight tooling closed (T069). Open: T063–T067, T070 — external human approvals (rights, curriculum, privacy, usability pilot, release sign-off), each documented on its issue |
+
+Full regression (all green): typecheck · 9 contracts · 7 unit · 10 integration · 8 security · web build 99.77 KB gzip · 12 Playwright tests.
 
 ## What works right now (evidence-backed)
 
-The M0 foundations and the M1 safe vertical slice are implemented and tested against a real local PostgreSQL:
+Implemented and tested against a real local PostgreSQL:
 
 - **Adult authentication** (Better Auth 1.7.2, email + password) with required email verification — unverified adults cannot create child profiles.
 - **Server-enforced parent gate** (5-minute, password reauthentication) and **child mode**: parent APIs fail in child mode even with a valid adult cookie; mounted auth account-mutation routes are allowlist-guarded in child mode.
