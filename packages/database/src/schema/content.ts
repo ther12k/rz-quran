@@ -94,11 +94,6 @@ export const lessons = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
-    foreignKey({
-      name: "lessons_current_version_fk",
-      columns: [t.currentVersionId, t.id],
-      foreignColumns: [lessonVersions.id, lessonVersions.lessonId],
-    }),
     check("lessons_stable_key_format", sql`${t.stableKey} ~ '^[a-z0-9][a-z0-9_-]{0,63}$'`),
   ],
 );

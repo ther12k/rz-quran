@@ -83,8 +83,7 @@ export const learningEvents = pgTable(
       name: "learning_events_session_fk",
       columns: [t.sessionId, t.childId],
       foreignColumns: [learningSessions.id, learningSessions.childId],
-      onDelete: "cascade",
-    }),
+    }).onDelete("cascade"),
     unique("learning_events_session_sequence").on(t.sessionId, t.sequence),
     unique("learning_events_id_session").on(t.id, t.sessionId),
     check("learning_events_sequence_positive", sql`${t.sequence} > 0`),
@@ -107,8 +106,7 @@ export const sessionUnits = pgTable(
       name: "session_units_session_fk",
       columns: [t.sessionId, t.childId, t.versionId],
       foreignColumns: [learningSessions.id, learningSessions.childId, learningSessions.versionId],
-      onDelete: "cascade",
-    }),
+    }).onDelete("cascade"),
     foreignKey({
       name: "session_units_unit_fk",
       columns: [t.unitId, t.versionId],
@@ -135,8 +133,7 @@ export const firstAnswers = pgTable(
       name: "first_answers_session_fk",
       columns: [t.sessionId, t.childId, t.versionId],
       foreignColumns: [learningSessions.id, learningSessions.childId, learningSessions.versionId],
-      onDelete: "cascade",
-    }),
+    }).onDelete("cascade"),
     foreignKey({
       name: "first_answers_question_fk",
       columns: [t.questionId, t.versionId],
@@ -146,8 +143,7 @@ export const firstAnswers = pgTable(
       name: "first_answers_event_fk",
       columns: [t.firstEventId, t.sessionId],
       foreignColumns: [learningEvents.id, learningEvents.sessionId],
-      onDelete: "cascade",
-    }),
+    }).onDelete("cascade"),
   ],
 );
 

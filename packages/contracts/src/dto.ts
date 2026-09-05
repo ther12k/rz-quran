@@ -179,28 +179,28 @@ export type LearningSessionDto = z.infer<typeof learningSessionSchema>;
 
 // progress-event.schema.json mirror: untrusted client events.
 export const progressEventSchema = z.discriminatedUnion("type", [
-  z.object({
+  z.strictObject({
     event_id: uuidSchema,
     sequence: z.number().int().min(1),
     client_at: z.string().datetime().nullable(),
     type: z.literal("unit_acknowledged"),
     unit_id: uuidSchema,
   }),
-  z.object({
+  z.strictObject({
     event_id: uuidSchema,
     sequence: z.number().int().min(1),
     client_at: z.string().datetime().nullable(),
     type: z.literal("heartbeat"),
     active_ms: z.number().int().min(0).max(15000),
   }),
-  z.object({
+  z.strictObject({
     event_id: uuidSchema,
     sequence: z.number().int().min(1),
     client_at: z.string().datetime().nullable(),
     type: z.literal("paused"),
     reason: z.enum(["user", "hidden", "network"]),
   }),
-  z.object({
+  z.strictObject({
     event_id: uuidSchema,
     sequence: z.number().int().min(1),
     client_at: z.string().datetime().nullable(),

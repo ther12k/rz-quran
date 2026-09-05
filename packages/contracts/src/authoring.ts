@@ -15,6 +15,7 @@ const questionSchema = z.object({
   options: z.array(optionSchema).min(2).max(4),
   correct_option_id: z.string().regex(/^[a-z0-9][a-z0-9_-]{0,31}$/),
   explanation: z.string().min(1),
+  source_ids: z.array(z.string().uuid()),
 });
 
 const verseRefSchema = z.object({
@@ -28,8 +29,9 @@ const unitSchema = z.object({
   unit_type: z.enum(["instruction", "letter", "ayah", "choice"]),
   required: z.boolean(),
   instruction: z.string().min(1),
-  letter: z.string().min(1).max(16).nullable(),
-  verse_ref: verseRefSchema.nullable(),
+  letter: z.string().min(1).max(16).optional(),
+  verse_ref: verseRefSchema.optional(),
+  question_id: z.string().uuid().optional(),
   audio_asset_id: z.string().uuid().nullable(),
 });
 

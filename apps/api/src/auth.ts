@@ -5,12 +5,19 @@
 // - The app-level parent gate and mode switching live in modules/identity,
 //   not in the auth library.
 import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { verifyPassword } from "better-auth/crypto";
 import { createDatabase, schema } from "@rzq/database";
 import type { AppEnv } from "./env.ts";
 
 export type Auth = ReturnType<typeof createAuth>;
 
-export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>) {
+export type AuthHooks = {
+  /** Test/diagnostic hook; production always logs the URL via the mailer. */
+  onVerificationEmail?: (url: string) => void;
+};
+
+export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>, hooks: AuthHooks = {}) {
   const mailerConfigured = Boolean(env.smtpUrl && env.mailFrom);
   if (env.appEnv === "production" && !mailerConfigured) {
     // Production requires real email delivery; refuse to boot instead of
@@ -19,12 +26,15 @@ export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>) {
   }
 
   return betterAuth({
-    database: {
-      db,
-      // Drizzle instance is directly supported; table/column names follow
-      // packages/database/src/schema/auth.ts (verified against pinned version).
-      type: "postgres",
-    },
+    database: drizzleAdapter(db, {
+      provider: "pg",
+      schema: {
+        user: schema.user,
+        session: schema.session,
+        account: schema.account,
+        verification: schema.verification,
+      },
+    }),
     secret: env.authSecret,
     baseURL: env.authBaseUrl,
     trustedOrigins: [env.appOrigin],
@@ -38,6 +48,7 @@ export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>) {
       expiresIn: 60 * 60, // 1 hour
       sendOnSignUp: true,
       sendVerificationEmail: async ({ user, url }) => {
+        hooks.onVerificationEmail?.(url);
         if (mailerConfigured) {
           // Real SMTP delivery is configured by deployment; local dev logs only.
           // Delivery adapter wiring is a deployment concern (D09 pending).
@@ -64,12 +75,10 @@ export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>) {
   });
 }
 
-// Supported password verification for the parent gate: uses the auth
-// library's own password context (same scrypt parameters as sign-in).
-// We verify against the CURRENT session's user credential, never trust a
-// client-supplied user id.
+// Supported password verification for the parent gate: the auth library's
+// exported scrypt verifier (better-auth/crypto), used against the CURRENT
+// session user's credential row. A client boolean is never accepted.
 export async function verifyPasswordForUser(
-  auth: Auth,
   db: ReturnType<typeof createDatabase>,
   authUserId: string,
   password: string,
@@ -77,18 +86,15 @@ export async function verifyPasswordForUser(
   const rows = await db
     .select({ passwordHash: schema.account.password })
     .from(schema.account)
-    .where(eqAnd(schema.account.userId, authUserId, schema.account.providerId, "credential"));
+    .where(and(eq(schema.account.userId, authUserId), eq(schema.account.providerId, "credential")))
+    .limit(1);
   const hash = rows[0]?.passwordHash;
   if (!hash) return false;
-  // $context exposes the library's password hashing utilities (pinned version).
-  const passwordCtx = (auth as unknown as { $context: { password: { verify(p: string, h: string): Promise<boolean> } } })
-    .$context.password;
-  return passwordCtx.verify(password, hash);
+  try {
+    return await verifyPassword({ hash, password });
+  } catch {
+    return false;
+  }
 }
 
-// Small local helper to avoid importing drizzle operators at module top in
-// every file; keeps eq/and usage explicit here.
 import { and, eq } from "drizzle-orm";
-function eqAnd<T>(col: Parameters<typeof eq>[0], val: unknown, col2: Parameters<typeof eq>[0], val2: unknown) {
-  return and(eq(col, val as never), eq(col2, val2 as never));
-}

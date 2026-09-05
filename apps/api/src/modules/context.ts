@@ -6,7 +6,7 @@
 //   parent_gate   : adult_session + mode=parent + live 5-minute gate
 //   child_session : adult_session + mode=child + owned active child + consent
 import { and, desc, eq, isNull } from "drizzle-orm";
-import type { Database, schema } from "@rzq/database";
+import { schema, type Database } from "@rzq/database";
 import type { Auth } from "../auth.ts";
 import { ApiError } from "../errors.ts";
 import type { ConsentPolicy } from "../env.ts";
@@ -85,8 +85,9 @@ export async function resolveContext(
     .where(and(eq(schema.consentRecords.parentId, parent.id), isNull(schema.consentRecords.childId)))
     .orderBy(desc(schema.consentRecords.recordedAt))
     .limit(1);
+  const familyAction = familyRecords[0]?.action;
   const familyConsent: "granted" | "withdrawn" | "none" =
-    familyRecords.length === 0 ? "none" : familyRecords[0]!.action;
+    familyAction === "grant" ? "granted" : familyAction === "withdraw" ? "withdrawn" : "none";
 
   let childConsentEffective = familyConsent === "granted";
   if (childConsentEffective && controls.activeChildId) {

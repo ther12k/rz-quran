@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+/* Design tokens from design/tokens.json (proposed values; contrast to be
+   re-measured in actual components — T005). */
+@theme {
+  --color-primary: #157f43;
+  --color-primary-hover: #106335;
+  --color-ink: #17312b;
+  --color-muted: #54675e;
+  --color-page: #fbfcf7;
+  --color-surface: #ffffff;
+  --color-border-soft: #dee8dd;
+  --color-mint: #eaf6e8;
+  --color-lavender: #f2edfb;
+  --color-sky: #eaf2fe;
+  --color-sunny: #fff6d9;
+  --color-error: #ac3030;
+  --color-focus: #184bb5;
+
+  --font-latin: "Nunito", system-ui, sans-serif;
+  --font-arabic: "Noto Naskh Arabic", serif;
+
+  --radius-card: 24px;
+  --radius-small: 16px;
+
+  --spacing-touch: 48px;
+}
+
+html {
+  font-family: var(--font-latin);
+  background: var(--color-page);
+  color: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Arabic practice text rules (docs/02 §2): RTL, no letter spacing,
+   generous line height, marks never clipped. */
+.arabic {
+  font-family: var(--font-arabic);
+  direction: rtl;
+  unicode-bidi: isolate;
+  line-height: 1.9;
+  letter-spacing: 0;
+}
+
+/* Visible focus everywhere (FR-17). */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* Reduced motion: disable nonessential animation (FR-12). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 48px minimum interactive targets (product policy). */
+.btn-touch {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}

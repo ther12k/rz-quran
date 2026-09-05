@@ -25,7 +25,7 @@ function authRouteAllowedInChildMode(method: string, path: string): boolean {
 
 export function identityModule(bindings: () => AppBindings) {
   return new Elysia({ prefix: "/api" })
-    .get("/auth/*", async ({ request, set }) => {
+    .all("/auth/*", async ({ request, set }) => {
       const { auth } = bindings();
       const url = new URL(request.url);
       const path = url.pathname.replace(/\/+$/, "") || "/api/auth";
@@ -103,17 +103,10 @@ export function identityModule(bindings: () => AppBindings) {
           error: { code: "AUTH_REQUIRED", message: "Sesi berakhir. Silakan masuk lagi.", request_id: b.requestId },
         };
       }
-      if (ctx.controls.mode !== "parent") {
-        set.status = 403;
-        return {
-          error: {
-            code: "PARENT_GATE_REQUIRED",
-            message: "Area ini hanya untuk orang tua.",
-            request_id: b.requestId,
-          },
-        };
-      }
-      const ok = await verifyPasswordForUser(b.auth, b.db, ctx.authUserId, parsed.data.password);
+      // Gate unlock is valid from BOTH modes: returning from child mode to
+      // the parent area requires exactly this reauthentication (S15, FR-03).
+      // Entering child mode clears the gate; unlocking sets mode=parent.
+      const ok = await verifyPasswordForUser(b.db, ctx.authUserId, parsed.data.password);
       if (!ok) {
         set.status = 401;
         return {
@@ -127,11 +120,11 @@ export function identityModule(bindings: () => AppBindings) {
       const until = new Date(Date.now() + GATE_DURATION_MS);
       await b.db
         .update(schema.sessionControls)
-        .set({ adultGateUntil: until, lastVerifiedAt: new Date() })
+        .set({ mode: "parent", adultGateUntil: until, lastVerifiedAt: new Date() })
         .where(eq(schema.sessionControls.authSessionId, ctx.authSessionId));
       set.headers["Cache-Control"] = "no-store";
       return {
-        mode: ctx.controls.mode,
+        mode: "parent" as const,
         email_verified: ctx.emailVerified,
         parent_gate_until: until.toISOString(),
         active_child_id: ctx.controls.activeChildId,

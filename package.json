@@ -27,7 +27,15 @@
     "check:production-readiness": "bun run --filter @rzq/api check:production-readiness"
   },
   "devDependencies": {
+    "@rzq/api": "workspace:*",
+    "@rzq/contracts": "workspace:*",
+    "@rzq/database": "workspace:*",
+    "better-auth": "^1.7.2",
     "concurrently": "^9.2.1",
-    "typescript": "^5.9.2"
+    "drizzle-orm": "^0.44.7",
+    "elysia": "^1.4.30",
+    "postgres": "^3.4.7",
+    "typescript": "^5.9.2",
+    "vitest": "^3"
   }
 }
