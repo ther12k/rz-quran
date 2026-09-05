@@ -1,0 +1,21 @@
+{
+  "measured_at": "2026-09-05T08:53:27.184Z",
+  "profile": {
+    "viewport": "390x844 @2x (mobile emulation)",
+    "cpuThrottle": "4x",
+    "network": "slow 4G — 1.6 Mbps down / 750 kbps up / 150 ms RTT",
+    "page": "/anak/beranda (signed-in child home)",
+    "environment": "local dev servers (Vite 7 dev + Bun/Elysia API) — not production CDN"
+  },
+  "budgets": {
+    "lcpMs": 2500,
+    "inpMs": 200,
+    "cls": 0.1
+  },
+  "measured": {
+    "lcp_ms": 1656,
+    "inp_ms": 41,
+    "inp_note": "interaction timing",
+    "cls": 0
+  }
+}

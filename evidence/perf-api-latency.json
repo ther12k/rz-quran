@@ -1,0 +1,19 @@
+{
+  "measured_at": "2026-09-05T08:49:55.715Z",
+  "environment": {
+    "api": "local Bun/Elysia (bun 1.4.0) on linux x64 (host dev machine)",
+    "database": "local PostgreSQL 16 (docker, same host) — not production infra",
+    "endpoint": "GET /api/v1/me (authenticated read)",
+    "concurrency": 50,
+    "total_samples": 349,
+    "errors": 0
+  },
+  "measured": {
+    "p50_ms": 83,
+    "p95_ms": 175,
+    "p99_ms": 175,
+    "max_ms": 180,
+    "wall_seconds": 0.63,
+    "throughput_rps": 552.6
+  }
+}

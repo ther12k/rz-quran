@@ -69,11 +69,21 @@ export function ChildHomePage({ onExit }: { onExit: () => void }) {
         </header>
         <p className="mt-1 text-[14px] text-muted">Sedikit demi sedikit, yuk!</p>
 
-        <section aria-labelledby="lanjut-h" className="mt-5">
+        <section aria-labelledby="lanjut-h" className="mt-5 min-h-[292px]">
           <h2 id="lanjut-h" className="sr-only">
             Lanjut belajar
           </h2>
-          {catalog.isPending ? <p className="text-muted font-semibold">Sedang menyiapkan…</p> : null}
+          {/* Skeleton reserves the loaded card's height so late data does not
+              shift the page (T059 CLS budget 0.1). */}
+          {catalog.isPending ? (
+            <div className="rounded-[24px] bg-mint/60 border border-border-soft p-5 animate-pulse" aria-hidden="true">
+              <div className="h-5 w-44 rounded-full bg-border-soft/70" />
+              <div className="mt-4 h-6 w-64 rounded-full bg-border-soft/70" />
+              <div className="mt-3 h-4 w-52 rounded-full bg-border-soft/50" />
+              <div className="mt-4 h-3 rounded-full bg-border-soft/50" />
+              <div className="mt-5 h-12 w-full rounded-full bg-border-soft/60" />
+            </div>
+          ) : null}
           {catalog.isError ? <p className="text-muted font-semibold">Materi belum tersedia. Minta bantuan orang tua, ya.</p> : null}
           {lesson ? (
             <div className="rounded-[24px] bg-mint border border-border-soft p-5">

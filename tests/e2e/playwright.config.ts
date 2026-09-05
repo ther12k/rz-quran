@@ -28,6 +28,13 @@ export default defineConfig({
   ],
   projects: [
     {
+      name: "mobile-320",
+      use: {
+        viewport: { width: 320, height: 568 },
+        deviceScaleFactor: 1,
+      },
+    },
+    {
       name: "mobile-390",
       use: {
         viewport: { width: 390, height: 844 },
@@ -38,6 +45,13 @@ export default defineConfig({
       name: "tablet-768",
       use: {
         viewport: { width: 768, height: 1024 },
+        deviceScaleFactor: 1,
+      },
+    },
+    {
+      name: "desktop-1024",
+      use: {
+        viewport: { width: 1024, height: 768 },
         deviceScaleFactor: 1,
       },
     },

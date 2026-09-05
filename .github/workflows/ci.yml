@@ -66,13 +66,13 @@ jobs:
           TEST_DATABASE_ADMIN_URL: postgresql://rzq:local_only@localhost:5433/postgres
         run: bun run test:integration
 
+      - name: Build Web Application Bundle
+        run: bun run --filter @rzq/web build
+
       - name: Run Security Negative Tests
         env:
           TEST_DATABASE_ADMIN_URL: postgresql://rzq:local_only@localhost:5433/postgres
         run: bun run test:security
-
-      - name: Build Web Application Bundle
-        run: bun run --filter @rzq/web build
 
       - name: Verify Production Readiness Checks Fail-Closed
         env:

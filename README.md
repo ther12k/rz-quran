@@ -12,10 +12,10 @@ A mobile-first, Indonesian-language Qur'an learning experience for children, wit
 | M1 Safe slice | 15/15 closed | Auth, gate/child-mode, consent, profiles, learning engine, parent report, E2E + responsive screenshots |
 | M2 Learning experience | 17/17 closed | Catalog search/filters, DAG stages, audio controller, media delivery, 5 short surahs (Tanzil text), quiz + sound game, assessments, comfort settings |
 | M3 Content operations | 11/11 closed | Source/rights registry, asset quarantine + worker, two-person review (self-review blocked), release hashing, instant recall, content reports, audit trail, admin UI |
-| M4 Privacy & hardening | 10 closed / 3 open | Withdrawal, export, deletion + suppression ledger, rate limiting, service worker, a11y/Arabic verification. Open: T059 (field perf), T060 (CI scans), T062 (restore drill) — need real environments |
-| M5 Pilot & launch | 1 closed / 7 open | Preflight tooling closed (T069). Open: T063–T067, T070 — external human approvals (rights, curriculum, privacy, usability pilot, release sign-off), each documented on its issue |
+| M4 Privacy & hardening | 13/13 closed | Withdrawal, export, deletion + suppression ledger, rate limiting, service worker, a11y/Arabic verification, measured performance budgets (LCP 1656ms / INP 41ms / CLS 0 / API p95 175ms @50), automated leak scans, restore drill with resurrection proof |
+| M5 Pilot & launch | 1 closed / 7 open | Preflight tooling closed (T069). Open: T063–T068, T070 — external human approvals (rights, curriculum, privacy, artwork, usability pilot, release sign-off), each documented on its issue |
 
-Full regression (all green): typecheck · 9 contracts · 7 unit · 10 integration · 8 security · web build 99.77 KB gzip · 12 Playwright tests.
+Full regression (all green): typecheck · 9 contracts · 7 unit · 10 integration · 15 security (incl. automated leak scans) · web build 99.87 KB gzip · 17 Playwright tests across 320–1440. Performance evidence: `evidence/PERFORMANCE_REPORT.md`; restore drill: `evidence/restore-drill-*.md`.
 
 ## What works right now (evidence-backed)
 
