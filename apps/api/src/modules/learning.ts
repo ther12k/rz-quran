@@ -145,20 +145,79 @@ async function bumpDailyActivity(
 
 export function learningModule(bindings: () => AppBindings) {
   return new Elysia({ prefix: "/api/v1" })
-    .get("/catalog", async ({ request, set }) => {
+    .get("/catalog", async ({ request, set, query }) => {
       const b = bindings();
       const ctx = await requireChildSessionDb(b.auth, b.db, request);
-      const rows = await b.db
+
+      const allPublished = await b.db
         .select({ lesson: schema.lessons, version: schema.lessonVersions })
         .from(schema.lessons)
         .innerJoin(schema.lessonVersions, eq(schema.lessonVersions.id, schema.lessons.currentVersionId))
         .where(eq(schema.lessonVersions.status, "published"));
+
+      let rows = [...allPublished];
+
+      // T026: Search and filtering
+      const search = (query.search as string | undefined)?.toLowerCase().trim();
+      const lessonType = query.lesson_type as string | undefined;
+      const stageKey = query.stage_key as string | undefined;
+
+      if (search) {
+        rows = rows.filter((r) => r.version.title.toLowerCase().includes(search));
+      }
+      if (lessonType && lessonType !== "all") {
+        rows = rows.filter((r) => r.version.lessonType === lessonType);
+      }
+      if (stageKey && stageKey !== "all") {
+        rows = rows.filter((r) => r.version.stageKey === stageKey);
+      }
+
+      // Check stage overrides
+      const overrides = await b.db
+        .select()
+        .from(schema.stageOverrides)
+        .where(
+          and(
+            eq(schema.stageOverrides.childId, ctx.child.id),
+            eq(schema.stageOverrides.parentId, ctx.parent.id),
+            sql`revoked_at IS NULL`,
+          ),
+        );
+      const overrideLessonIds = new Set(overrides.map((o) => o.lessonId));
+
+      // T027: Prerequisites DAG
+      // Check foundational completed lessons
+      const completedProgress = await b.db
+        .select({ lessonId: schema.lessonProgress.lessonId })
+        .from(schema.lessonProgress)
+        .where(
+          and(
+            eq(schema.lessonProgress.childId, ctx.child.id),
+            sql`first_completed_at IS NOT NULL`,
+          ),
+        );
+      const completedSet = new Set(completedProgress.map((p) => p.lessonId));
+
       const items = await Promise.all(
         rows.map(async ({ lesson, version }) => {
           const units = await versionUnits(b, version.id);
           const required = units.filter((u) => u.required);
           const done = await childUnitProgress(b, ctx.child.id, version.id);
           const completedCount = required.filter((u) => done.has(u.id)).length;
+
+          // DAG Prerequisite rule: Stage 3 (short surahs) is locked unless at least one foundational letter lesson is complete, OR overridden by parent
+          let access: "available" | "locked" = "available";
+          const prerequisiteIds: string[] = [];
+          if (version.stageKey === "tahap_3_surat_pendek") {
+            const hasFoundation = completedSet.size > 0 || overrideLessonIds.has(lesson.id);
+            if (!hasFoundation) {
+              access = "locked";
+              // point to first lesson as prerequisite
+              const firstLesson = allPublished.find((r) => r.version.stageKey === "tahap_1_huruf_dasar");
+              if (firstLesson) prerequisiteIds.push(firstLesson.lesson.id);
+            }
+          }
+
           return {
             lesson_id: lesson.id,
             version_id: version.id,
@@ -166,8 +225,8 @@ export function learningModule(bindings: () => AppBindings) {
             lesson_type: version.lessonType,
             stage_key: version.stageKey,
             estimated_minutes: version.estimatedMinutes,
-            access: "available" as const,
-            prerequisite_lesson_ids: [] as string[],
+            access,
+            prerequisite_lesson_ids: prerequisiteIds,
             demo_only: version.demoOnly,
             practice: fraction(completedCount, required.length),
           };
@@ -187,6 +246,21 @@ export function learningModule(bindings: () => AppBindings) {
         version.sourceIds.length > 0
           ? await b.db.select().from(schema.contentSources).where(inArray(schema.contentSources.id, version.sourceIds))
           : [];
+
+      // Fetch authentic canonical texts for any ayah units
+      const ayahUnits = units.filter((u) => u.unitType === "ayah" && u.verseKey && u.verseSourceId);
+      const verseMap = new Map<string, string>();
+      if (ayahUnits.length > 0) {
+        const verseKeys = ayahUnits.map((u) => u.verseKey!);
+        const verses = await b.db
+          .select()
+          .from(schema.canonicalVerses)
+          .where(inArray(schema.canonicalVerses.verseKey, verseKeys));
+        for (const v of verses) {
+          verseMap.set(v.verseKey, v.canonicalText);
+        }
+      }
+
       set.headers["Cache-Control"] = "no-store";
       return {
         lesson_id: lesson.id,
@@ -201,8 +275,8 @@ export function learningModule(bindings: () => AppBindings) {
           required: u.required,
           instruction: u.instruction,
           letter: u.letter,
-          verse_ref: null,
-          canonical_text: null,
+          verse_ref: u.verseKey && u.verseSourceId ? { source_id: u.verseSourceId, verse_key: u.verseKey } : null,
+          canonical_text: u.verseKey ? verseMap.get(u.verseKey) ?? null : null,
           audio_asset_id: u.audioAssetId,
           question_id: null as string | null,
         })),
@@ -212,6 +286,29 @@ export function learningModule(bindings: () => AppBindings) {
           attribution: s.attribution,
           reciter_name: null,
         })),
+      };
+    })
+    .get("/media/:assetId/playback", async ({ request, set, params }) => {
+      const b = bindings();
+      await requireChildSessionDb(b.auth, b.db, request);
+
+      const assets = await b.db
+        .select()
+        .from(schema.mediaAssets)
+        .where(eq(schema.mediaAssets.id, params.assetId))
+        .limit(1);
+
+      const asset = assets[0];
+      if (!asset || asset.status !== "verified") {
+        throw new ApiError("MEDIA_UNAVAILABLE", "Audio belum tersedia untuk materi ini.");
+      }
+
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        asset_id: asset.id,
+        playback_url: `/api/v1/media/stream/${asset.id}?token=${crypto.randomUUID()}`,
+        duration_ms: asset.durationMs ?? 0,
+        mime_type: asset.mimeType,
       };
     })
     .get("/learning/current", async ({ request, set }) => {
@@ -635,11 +732,53 @@ export function learningModule(bindings: () => AppBindings) {
         .select({ count: sql<number>`count(*)::int` })
         .from(schema.rewards)
         .where(eq(schema.rewards.childId, ctx.child.id));
+
+      const completedRows = await b.db
+        .select({
+          lessonId: schema.lessonProgress.lessonId,
+          lessonType: schema.lessonVersions.lessonType,
+        })
+        .from(schema.lessonProgress)
+        .innerJoin(schema.lessons, eq(schema.lessons.id, schema.lessonProgress.lessonId))
+        .innerJoin(schema.lessonVersions, eq(schema.lessonVersions.id, schema.lessons.currentVersionId))
+        .where(
+          and(
+            eq(schema.lessonProgress.childId, ctx.child.id),
+            sql`first_completed_at IS NOT NULL`,
+          ),
+        );
+
+      // T039: Descriptive non-punitive practice achievements
+      const achievements: { key: string; title: string; description: string }[] = [];
+      if (completedRows.length >= 1) {
+        achievements.push({
+          key: "langkah_pertama",
+          title: "Langkah Pertama",
+          description: "Menyelesaikan pelajaran pertama dengan tekun.",
+        });
+      }
+      const hijaiyahCount = completedRows.filter((r) => r.lessonType === "listening").length;
+      if (hijaiyahCount >= 3) {
+        achievements.push({
+          key: "sahabat_huruf",
+          title: "Sahabat Huruf",
+          description: "Berhasil mengenal dan melafalkan 3 huruf hijaiyah.",
+        });
+      }
+      const surahCount = completedRows.filter((r) => r.lessonType === "surah").length;
+      if (surahCount >= 1) {
+        achievements.push({
+          key: "latihan_surat",
+          title: "Latihan Surat Pendek",
+          description: "Mulai melatih hafalan ayat surat pendek.",
+        });
+      }
+
       set.headers["Cache-Control"] = "no-store";
       return {
         child_nickname: ctx.child.nickname,
         stars: stars[0]?.count ?? 0,
-        achievements: [] as string[],
+        achievements,
       };
     });
 }

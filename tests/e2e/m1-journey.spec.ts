@@ -92,7 +92,7 @@ test("M1 Visual & Interaction Journey", async ({ page }) => {
 
   // 7. S07: Lesson Player
   await page.click('button:has-text("Ayo mulai belajar"), button:has-text("Lanjut belajar")');
-  await expect(page.locator("header")).toContainText("Langkah");
+  await expect(page.locator("h1")).toContainText("Mengenal Huruf");
   await page.screenshot({ path: join(SCREENSHOT_DIR, `${prefix}-08-lesson-step-instruction.png`), fullPage: true });
 
   // Click Mulai
@@ -135,7 +135,7 @@ test("M1 Visual & Interaction Journey", async ({ page }) => {
   // 9. S16: Parent Progress View
   await expect(page.locator("li")).toContainText("Aisyah");
   await page.click('a:has-text("Progres")');
-  await expect(page.locator("h1")).toContainText("Progres anak");
+  await expect(page.locator("h1")).toContainText("Area Orang Tua");
   await expect(page.locator('p:has-text("Pelajaran selesai")')).toBeVisible();
   await page.waitForTimeout(600);
   await page.screenshot({ path: join(SCREENSHOT_DIR, `${prefix}-13-parent-progress.png`), fullPage: true });

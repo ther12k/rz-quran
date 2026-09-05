@@ -237,5 +237,165 @@ export function familiesModule(bindings: () => AppBindings) {
       set.status = 200;
       set.headers["Cache-Control"] = "no-store";
       return childDto(child);
+    })
+    .get("/parent/children/:childId/settings", async ({ request, set, params }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      const rows = await b.db
+        .select()
+        .from(schema.children)
+        .where(and(eq(schema.children.id, params.childId), eq(schema.children.parentId, ctx.parent.id)))
+        .limit(1);
+      const child = rows[0];
+      if (!child) throw new ApiError("NOT_FOUND", "Profil tidak ditemukan.");
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        session_goal_minutes: child.sessionGoalMinutes,
+        quiet_celebrations: child.quietCelebrations,
+        reduced_motion: child.reducedMotion,
+        timezone: child.timezone,
+      };
+    })
+    .put("/parent/children/:childId/settings", async ({ request, set, params, body }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      const data = body as { session_goal_minutes?: number; quiet_celebrations?: boolean; reduced_motion?: boolean; timezone?: string };
+      const updates: Partial<typeof schema.children.$inferInsert> = { updatedAt: new Date() };
+      if (data.session_goal_minutes !== undefined) {
+        if (![5, 10, 15].includes(data.session_goal_minutes)) {
+          throw new ApiError("VALIDATION_ERROR", "Target sesi harus 5, 10, atau 15 menit.");
+        }
+        updates.sessionGoalMinutes = data.session_goal_minutes as 5 | 10 | 15;
+      }
+      if (data.quiet_celebrations !== undefined) updates.quietCelebrations = Boolean(data.quiet_celebrations);
+      if (data.reduced_motion !== undefined) updates.reducedMotion = Boolean(data.reduced_motion);
+      if (data.timezone !== undefined) updates.timezone = String(data.timezone);
+
+      const rows = await b.db
+        .update(schema.children)
+        .set(updates)
+        .where(and(eq(schema.children.id, params.childId), eq(schema.children.parentId, ctx.parent.id)))
+        .returning();
+      if (rows.length === 0) throw new ApiError("NOT_FOUND", "Profil tidak ditemukan.");
+      const c = rows[0]!;
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        session_goal_minutes: c.sessionGoalMinutes,
+        quiet_celebrations: c.quietCelebrations,
+        reduced_motion: c.reducedMotion,
+        timezone: c.timezone,
+      };
+    })
+    .get("/parent/children/:childId/assessments", async ({ request, set, params }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      const child = await b.db
+        .select({ id: schema.children.id })
+        .from(schema.children)
+        .where(and(eq(schema.children.id, params.childId), eq(schema.children.parentId, ctx.parent.id)))
+        .limit(1);
+      if (child.length === 0) throw new ApiError("NOT_FOUND", "Profil tidak ditemukan.");
+
+      const rows = await b.db
+        .select()
+        .from(schema.parentAssessments)
+        .where(and(eq(schema.parentAssessments.childId, params.childId), eq(schema.parentAssessments.parentId, ctx.parent.id)))
+        .orderBy(sql`observed_at desc`);
+
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        items: rows.map((r) => ({
+          id: r.id,
+          chapter_number: r.chapterNumber,
+          status: r.status,
+          observed_at: r.observedAt.toISOString(),
+        })),
+        next_cursor: null,
+      };
+    })
+    .post("/parent/children/:childId/assessments", async ({ request, set, params, body }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      const data = body as { chapter_number: number; status: "needs_practice" | "developing" | "parent_confirmed" };
+      if (!data.chapter_number || data.chapter_number < 1 || data.chapter_number > 114) {
+        throw new ApiError("VALIDATION_ERROR", "Nomor surat harus antara 1 dan 114.");
+      }
+      if (!["needs_practice", "developing", "parent_confirmed"].includes(data.status)) {
+        throw new ApiError("VALIDATION_ERROR", "Status penilaian tidak valid.");
+      }
+
+      const child = await b.db
+        .select({ id: schema.children.id })
+        .from(schema.children)
+        .where(and(eq(schema.children.id, params.childId), eq(schema.children.parentId, ctx.parent.id)))
+        .limit(1);
+      if (child.length === 0) throw new ApiError("NOT_FOUND", "Profil tidak ditemukan.");
+
+      const recordId = crypto.randomUUID();
+      const inserted = await b.db
+        .insert(schema.parentAssessments)
+        .values({
+          id: recordId,
+          childId: params.childId,
+          parentId: ctx.parent.id,
+          chapterNumber: data.chapter_number,
+          status: data.status,
+          observedAt: new Date(),
+        })
+        .returning();
+
+      const r = inserted[0]!;
+      set.status = 201;
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        id: r.id,
+        chapter_number: r.chapterNumber,
+        status: r.status,
+        observed_at: r.observedAt.toISOString(),
+      };
+    })
+    .post("/parent/children/:childId/stage-overrides", async ({ request, set, params, body }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      const data = body as { lesson_id: string; reason: "parent_selected_start" | "guided_review" };
+      if (!data.lesson_id || !data.reason) throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.");
+
+      const rows = await b.db
+        .insert(schema.stageOverrides)
+        .values({
+          childId: params.childId,
+          parentId: ctx.parent.id,
+          lessonId: data.lesson_id,
+          reason: data.reason,
+          grantedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [schema.stageOverrides.childId, schema.stageOverrides.lessonId],
+          set: { reason: data.reason, revokedAt: null, grantedAt: new Date() },
+        })
+        .returning();
+      set.status = 201;
+      set.headers["Cache-Control"] = "no-store";
+      return {
+        child_id: rows[0]!.childId,
+        lesson_id: rows[0]!.lessonId,
+        reason: rows[0]!.reason,
+        granted_at: rows[0]!.grantedAt.toISOString(),
+      };
+    })
+    .post("/parent/children/:childId/replace-session", async ({ request, set, params }) => {
+      const b = bindings();
+      const ctx = requireParentGate(await resolveContext(b.auth, b.db, request));
+      await b.db
+        .update(schema.learningSessions)
+        .set({ status: "replaced" })
+        .where(
+          and(
+            eq(schema.learningSessions.childId, params.childId),
+            sql`status in ('active', 'paused')`,
+          ),
+        );
+      set.headers["Cache-Control"] = "no-store";
+      return { success: true };
     });
 }

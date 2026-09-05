@@ -7,6 +7,7 @@ import { LandingPage } from "./pages/landing.tsx";
 import { AuthPage } from "./pages/auth.tsx";
 import { OnboardingPage } from "./pages/onboarding.tsx";
 import { ChildHomePage } from "./pages/child-home.tsx";
+import { CatalogPage } from "./pages/catalog.tsx";
 import { LessonPlayerPage } from "./pages/lesson-player.tsx";
 import { GatePage } from "./pages/gate.tsx";
 import { ParentProgressPage } from "./pages/parent-progress.tsx";
@@ -80,6 +81,7 @@ function ModeRouter() {
       return (
         <Routes>
           <Route path="/anak/beranda" element={<ChildHomePage onExit={refreshMe} />} />
+          <Route path="/anak/belajar" element={<CatalogPage />} />
           <Route path="/anak/belajar/:lessonId" element={<LessonPlayerPage onChanged={refreshMe} />} />
           <Route path="/anak/*" element={<Navigate to="/anak/beranda" replace />} />
         </Routes>
