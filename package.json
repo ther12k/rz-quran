@@ -27,6 +27,7 @@
     "check:production-readiness": "bun run --filter @rzq/api check:production-readiness"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@rzq/api": "workspace:*",
     "@rzq/contracts": "workspace:*",
     "@rzq/database": "workspace:*",

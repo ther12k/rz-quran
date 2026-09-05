@@ -2,17 +2,19 @@
 // No arithmetic puzzles; gate is a UX/security control, not consent proof.
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api, ApiError } from "../api.ts";
 import { Button, Card, ErrorNote, Field, TextInput } from "../components/ui.tsx";
 
 export function GatePage({ onUnlocked }: { onUnlocked: () => void }) {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const unlock = useMutation({
     mutationFn: () => api.unlockGate(password),
-    onSuccess: () => {
+    onSuccess: (res) => {
+      qc.setQueryData(["me"], res);
       onUnlocked();
       navigate("/orang-tua/anak", { replace: true });
     },

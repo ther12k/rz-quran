@@ -28,7 +28,11 @@ function ConsentStep({ onDone }: { onDone: () => void }) {
         policy_version: "demo-policy-1",
         assurance_token: "demo-local-assurance",
       }),
-    onSuccess: onDone,
+    onSuccess: async () => {
+      // Invalidate and immediately fetch fresh context
+      await api.me();
+      onDone();
+    },
     onError: (e) => setError(e instanceof ApiError ? e.message : "Gagal mencatat persetujuan."),
   });
 

@@ -24,11 +24,11 @@ function ModeRouter() {
   const me = useMe();
   const qc = useQueryClient();
   const location = useLocation();
+  const path = location.pathname;
 
   const refreshMe = () => {
-    // Mode/profile switches purge private caches (docs/13 §4).
-    qc.clear();
     void qc.invalidateQueries({ queryKey: ["me"] });
+    void qc.refetchQueries({ queryKey: ["me"] });
   };
 
   if (me.isPending) {
@@ -39,12 +39,14 @@ function ModeRouter() {
     );
   }
   if (me.isError) {
-    // Unauthenticated adults may still view the public landing.
-    if (me.error.status === 401 && location.pathname !== "/") {
-      return <Navigate to="/masuk" replace />;
-    }
     if (me.error.status === 401) {
-      return <LandingPage signedOut />;
+      if (path === "/masuk" || path === "/daftar") {
+        return <AuthPage stage="signin" onDone={refreshMe} />;
+      }
+      if (path === "/" || path.startsWith("/privasi") || path.startsWith("/sumber")) {
+        return <LandingPage signedOut />;
+      }
+      return <Navigate to="/masuk" replace />;
     }
     return (
       <div className="min-h-dvh grid place-items-center bg-page p-6 text-center">
@@ -55,7 +57,6 @@ function ModeRouter() {
   }
 
   const data = me.data;
-  const path = location.pathname;
 
   // Public pages.
   if (path === "/" || path.startsWith("/privasi") || path.startsWith("/sumber")) {
@@ -65,6 +66,12 @@ function ModeRouter() {
   if (!data.email_verified) {
     if (path.startsWith("/verifikasi")) return <AuthPage stage="verify-pending" />;
     return <Navigate to="/verifikasi" replace />;
+  }
+
+  // Parent gate is reachable from child mode (to exit to parent area)
+  // or parent mode (when gate has expired).
+  if (path.startsWith("/gerbang-orang-tua")) {
+    return <GatePage onUnlocked={refreshMe} />;
   }
 
   if (data.mode === "child") {
@@ -81,16 +88,17 @@ function ModeRouter() {
     return <Navigate to="/anak/beranda" replace />;
   }
 
-  // Parent mode (no gate yet): onboarding or gate entry.
-  if (path.startsWith("/gerbang-orang-tua")) {
-    return <GatePage onUnlocked={refreshMe} />;
-  }
+  // Parent mode: requires active gate.
   if (path.startsWith("/orang-tua/")) {
     if (!data.parent_gate_until || new Date(data.parent_gate_until).getTime() <= Date.now()) {
       return <Navigate to="/gerbang-orang-tua" replace />;
     }
     if (path.startsWith("/orang-tua/anak/") && path.endsWith("/progres")) {
-      return <ParentProgressPage />;
+      return (
+        <Routes>
+          <Route path="/orang-tua/anak/:childId/progres" element={<ParentProgressPage />} />
+        </Routes>
+      );
     }
     if (!data.effective_consent) {
       return <OnboardingPage stage="consent" onDone={refreshMe} />;

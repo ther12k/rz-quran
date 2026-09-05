@@ -1,0 +1,87 @@
+name: CI Quality Gate
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Lint, Typecheck, Contracts & Security Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: rzq
+          POSTGRES_PASSWORD: local_only
+          POSTGRES_DB: quran_kids
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Typecheck Contracts, Database, API & Web
+        run: bun run typecheck
+
+      - name: Validate Contract Schemas & Examples
+        run: bun run test:contracts
+
+      - name: Run Environment & Safety Unit Tests
+        run: bun run test:unit
+
+      - name: Apply Database Migrations
+        env:
+          DATABASE_URL: postgresql://rzq:local_only@localhost:5433/quran_kids
+          APP_ENV: test
+          DEMO_MODE: "true"
+        run: bun run db:migrate
+
+      - name: Seed Guarded Demo Fixtures
+        env:
+          DATABASE_URL: postgresql://rzq:local_only@localhost:5433/quran_kids
+          APP_ENV: test
+          DEMO_MODE: "true"
+        run: bun run db:seed:demo
+
+      - name: Run Integration Tests on Disposable DB
+        env:
+          TEST_DATABASE_ADMIN_URL: postgresql://rzq:local_only@localhost:5433/postgres
+        run: bun run test:integration
+
+      - name: Run Security Negative Tests
+        env:
+          TEST_DATABASE_ADMIN_URL: postgresql://rzq:local_only@localhost:5433/postgres
+        run: bun run test:security
+
+      - name: Build Web Application Bundle
+        run: bun run --filter @rzq/web build
+
+      - name: Verify Production Readiness Checks Fail-Closed
+        env:
+          APP_ENV: production
+          DEMO_MODE: "true"
+        run: |
+          if bun run check:production-readiness; then
+            echo "Expected readiness check to fail on DEMO_MODE=true in production!"
+            exit 1
+          else
+            echo "Production readiness correctly failed closed on demo mode."
+          fi

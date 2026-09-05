@@ -58,11 +58,11 @@ export function ChildHomePage({ onExit }: { onExit: () => void }) {
   return (
     <ChildShell activeTab="beranda">
       <main className="mx-auto max-w-[680px] px-4 pt-5">
-        <header className="flex items-center justify-between gap-3">
-          <p className="text-[20px] font-extrabold truncate">Assalamu'alaikum, {nickname}!</p>
+        <header className="flex items-center justify-between gap-2">
+          <p className="text-[17px] sm:text-[20px] font-extrabold truncate">Assalamu'alaikum, {nickname}!</p>
           <Link
             to="/gerbang-orang-tua"
-            className="btn-touch flex items-center px-4 rounded-full bg-surface border border-border-soft text-[14px] font-bold text-muted"
+            className="btn-touch flex shrink-0 items-center px-4 rounded-full bg-surface border border-border-soft text-[14px] font-bold text-muted"
           >
             Orang tua
           </Link>
