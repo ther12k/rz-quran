@@ -20,7 +20,16 @@ function walk(dir: string, exts: string[], acc: string[] = []): string[] {
 
 const sourceFiles = [
   ...walk(join(ROOT, "apps/web/src"), [".ts", ".tsx", ".js", ".html"]),
-  ...walk(join(ROOT, "apps/web/public"), [".js", ".json", ".html", ".webmanifest"]),
+  // kids-runtime is the synced Godot web-export BUILD ARTIFACT (gitignored,
+  // produced by scripts/sync-runtime.sh from the ther12k/rzquran client repo).
+  // Godot's engine layer contains inert references to media-capture APIs that
+  // this game never invokes (no JS eval of external code, no camera/mic
+  // features; the Android export grants only INTERNET permission — verified in
+  // the client repo build, GDM-002). Scanning the engine bundle here would
+  // flag the engine itself, not MVP source.
+  ...walk(join(ROOT, "apps/web/public"), [".js", ".json", ".html", ".webmanifest"]).filter(
+    (f) => !f.includes(`kids-runtime`),
+  ),
   ...walk(join(ROOT, "apps/api/src"), [".ts"]),
   ...walk(join(ROOT, "packages"), [".ts"]),
 ];

@@ -95,6 +95,22 @@ export async function purgeExpiredIdempotency(db: ReturnType<typeof createDataba
   return deleted.length;
 }
 
+// Pairing/grant retention (GDM-009 / QA-20): staging pairing state is
+// transient; expired rows are swept after a 24h forensic window.
+export async function purgeExpiredPairingState(db: ReturnType<typeof createDatabase>): Promise<number> {
+  const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  await db.delete(schema.kidsPairingAttempts).where(lte(schema.kidsPairingAttempts.createdAt, cutoff));
+  const pairings = await db
+    .delete(schema.kidsPairings)
+    .where(lte(schema.kidsPairings.expiresAt, cutoff))
+    .returning({ id: schema.kidsPairings.id });
+  const grants = await db
+    .delete(schema.kidsGrants)
+    .where(sql`${schema.kidsGrants.expiresAt} <= ${cutoff} and ${schema.kidsGrants.revokedAt} is not null`)
+    .returning({ id: schema.kidsGrants.id });
+  return pairings.length + grants.length;
+}
+
 export async function startWorkerLoop(databaseUrl: string, intervalMs = 2000): Promise<void> {
   const db = createDatabase(databaseUrl);
   console.log("[worker] Job worker loop started.");
@@ -104,6 +120,7 @@ export async function startWorkerLoop(databaseUrl: string, intervalMs = 2000): P
       const processed = await processNextJob(db);
       if (!processed) {
         await purgeExpiredIdempotency(db);
+        await purgeExpiredPairingState(db);
         await new Promise((r) => setTimeout(r, intervalMs));
       }
     } catch (err) {

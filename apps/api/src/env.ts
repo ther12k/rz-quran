@@ -15,6 +15,14 @@ export type AppEnv = {
   approvedConsentMethod: string | null;
   /** GDM-006 rollback switch: new kids routes (abandon, media stream) 404 when off. */
   kidsMvpEnabled: boolean;
+  /**
+   * GDM-009 switch: staging-only native pairing (pairing/token/approve/revoke
+   * routes + grant auth). Refuses to boot in production when true, and the
+   * routes additionally 404 there.
+   */
+  kidsPairingEnabled: boolean;
+  /** Allowlisted parent emails that may approve a staging pairing (GDM-004). */
+  kidsPairingParentAllowlist: string[];
   /** Dev/test-only local media byte storage; production uses its own decision. */
   mediaStorageRoot: string | null;
 }
@@ -38,6 +46,11 @@ export function parseEnv(source: Record<string, string | undefined>): AppEnv {
     approvedPrivacyPolicyVersion: source.APPROVED_PRIVACY_POLICY_VERSION || null,
     approvedConsentMethod: source.APPROVED_CONSENT_METHOD || null,
     kidsMvpEnabled: source.KIDS_MVP_ENABLED === "true",
+    kidsPairingEnabled: source.KIDS_PAIRING_ENABLED === "true",
+    kidsPairingParentAllowlist: (source.KIDS_PAIRING_PARENT_ALLOWLIST ?? "")
+      .split(",")
+      .map((entry) => entry.trim().toLowerCase())
+      .filter(Boolean),
     mediaStorageRoot: source.MEDIA_STORAGE_ROOT || null,
   };
 }
@@ -54,6 +67,11 @@ export function productionReadinessViolations(env: AppEnv): string[] {
 
   if (env.demoMode) {
     violations.push("DEMO_MODE must be false in production (demo fixtures/consent refused).");
+  }
+  if (env.kidsPairingEnabled) {
+    // Staging-only native pairing (GDM-004 threat review): production must
+    // neither issue grants nor accept their audience.
+    violations.push("KIDS_PAIRING_ENABLED must be false in production (staging-only native pairing).");
   }
   if (!env.productionChildEnrollmentEnabled) {
     // This is the safe default; enabling requires the approvals below.

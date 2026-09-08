@@ -141,8 +141,7 @@ export async function requireChildSessionDb(
   auth: Auth,
   db: Database,
   request: Request,
-): Promise<ChildContext> {
-  const ctx = await resolveContext(auth, db, request);
+): Promise<ChildContext> {  const ctx = await resolveContext(auth, db, request);
   if (!ctx) throw new ApiError("AUTH_REQUIRED", "Sesi berakhir. Silakan masuk lagi.");
   if (ctx.controls.mode !== "child" || !ctx.controls.activeChildId) {
     throw new ApiError("AUTH_REQUIRED", "Sesi anak belum aktif.");
@@ -163,6 +162,28 @@ export async function requireChildSessionDb(
   return { ...ctx, child };
 }
 
+/**
+ * Child routes accept two transports (GDM-009): the browser cookie session,
+ * or — only when staging pairing is enabled outside production — a bearer
+ * staging grant. Grant failures stay neutral (401) and never echo token state.
+ */
+export async function requireChildAccess(
+  auth: Auth,
+  db: Database,
+  request: Request,
+  env: import("../env.ts").AppEnv,
+): Promise<ChildContext> {
+  const { grantAuthAllowed, resolveGrantChildSession } = await import("../kids-grant.ts");
+  try {
+    return await requireChildSessionDb(auth, db, request);
+  } catch (err) {
+    if (err instanceof ApiError && err.code === "AUTH_REQUIRED" && grantAuthAllowed(env)) {
+      const authHeader = request.headers.get("Authorization");
+      if (authHeader) return resolveGrantChildSession(db, request, env);
+    }
+    throw err;
+  }
+}
 export type AppBindings = {
   auth: Auth;
   db: Database;

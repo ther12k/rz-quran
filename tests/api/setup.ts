@@ -81,12 +81,13 @@ export function makeClient(app: TestApp["app"], baseUrl: string) {
     set cookie(value: string) {
       cookie = value;
     },
-    async call(method: string, path: string, opts: { body?: unknown; idempotencyKey?: string; expectStatus?: number; raw?: boolean } = {}) {
+    async call(method: string, path: string, opts: { body?: unknown; idempotencyKey?: string; expectStatus?: number; raw?: boolean; headers?: Record<string, string> } = {}) {
       const headers: Record<string, string> = {
         Origin: "http://test.local",
         ...(opts.body !== undefined ? { "Content-Type": "application/json" } : {}),
         ...(cookie ? { Cookie: cookie } : {}),
         ...(opts.idempotencyKey ? { "Idempotency-Key": opts.idempotencyKey } : {}),
+        ...opts.headers,
       };
       const res = await app.fetch(
         new Request(`${baseUrl}${path}`, {

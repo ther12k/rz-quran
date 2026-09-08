@@ -19,6 +19,7 @@ export type ApiErrorCode =
   | "CONTENT_INVALID"
   | "RATE_LIMITED"
   | "MEDIA_UNAVAILABLE"
+  | "PAIRING_INVALID"
   | "INTERNAL_ERROR";
 
 const STATUS: Record<ApiErrorCode, number> = {
@@ -41,6 +42,9 @@ const STATUS: Record<ApiErrorCode, number> = {
   CONTENT_INVALID: 422,
   RATE_LIMITED: 429,
   MEDIA_UNAVAILABLE: 503,
+  // Neutral by design: wrong verifier, expiry, replay and denial all return
+  // the same code+message so token/pairing state is not an oracle (QA-17).
+  PAIRING_INVALID: 400,
   INTERNAL_ERROR: 500,
 };
 

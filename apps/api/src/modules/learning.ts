@@ -14,7 +14,7 @@ import {
   kidsStartSessionStrictSchema,
 } from "@rzq/contracts";
 import { ApiError } from "../errors.ts";
-import { requireChildSessionDb, type AppBindings, type ChildContext } from "./context.ts";
+import { requireChildAccess, type AppBindings, type ChildContext } from "./context.ts";
 import { withIdempotency } from "../idempotency.ts";
 
 type UnitRow = typeof schema.lessonUnits.$inferSelect;
@@ -155,7 +155,7 @@ export function learningModule(bindings: () => AppBindings) {
   return new Elysia({ prefix: "/api/v1" })
     .get("/catalog", async ({ request, set, query }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
 
       const allPublished = await b.db
         .select({ lesson: schema.lessons, version: schema.lessonVersions })
@@ -245,7 +245,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .get("/lessons/:lessonId", async ({ request, set, params }) => {
       const b = bindings();
-      await requireChildSessionDb(b.auth, b.db, request);
+      await requireChildAccess(b.auth, b.db, request, b.env);
       const found = await currentPublishedVersion(b, params.lessonId);
       if (!found) throw new ApiError("NOT_FOUND", "Materi tidak ditemukan.");
       const { lesson, version } = found;
@@ -298,7 +298,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .get("/media/:assetId/playback", async ({ request, set, params }) => {
       const b = bindings();
-      await requireChildSessionDb(b.auth, b.db, request);
+      await requireChildAccess(b.auth, b.db, request, b.env);
 
       const assets = await b.db
         .select()
@@ -321,7 +321,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .get("/learning/current", async ({ request, set }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const rows = await b.db
         .select()
         .from(schema.learningSessions)
@@ -334,7 +334,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .post("/learning/sessions", async ({ request, set, body }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       // GDM-007: strict write schema — unknown fields reject (QA-04).
       const parsed = kidsStartSessionStrictSchema.safeParse(body);
       if (!parsed.success) throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.");
@@ -386,7 +386,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .get("/learning/sessions/:sessionId", async ({ request, set, params }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const rows = await b.db
         .select()
         .from(schema.learningSessions)
@@ -398,7 +398,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .post("/learning/sessions/:sessionId/events", async ({ request, set, body, params }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const parsed = kidsEventBatchStrictSchema.safeParse(body);
       if (!parsed.success) {
         throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.", parsed.error.flatten());
@@ -526,7 +526,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .post("/learning/sessions/:sessionId/answers", async ({ request, set, body, params }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       // GDM-007: strict write schema — client-computed results cannot ride in.
       const parsed = kidsAnswerRequestStrictSchema.safeParse(body);
       if (!parsed.success) throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.", parsed.error.flatten());
@@ -659,7 +659,7 @@ export function learningModule(bindings: () => AppBindings) {
     })
     .post("/learning/sessions/:sessionId/finish", async ({ request, set, params }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const idemKey = request.headers.get("Idempotency-Key");
 
       const outcome = await b.db.transaction(async (tx) => {
@@ -749,7 +749,7 @@ export function learningModule(bindings: () => AppBindings) {
     .post("/learning/sessions/:sessionId/abandon", async ({ request, set, params }) => {
       const b = bindings();
       if (!b.env.kidsMvpEnabled) throw new ApiError("NOT_FOUND", "Sesi tidak ditemukan.");
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const idemKey = request.headers.get("Idempotency-Key");
 
       const result = await withIdempotency({
@@ -799,7 +799,7 @@ export function learningModule(bindings: () => AppBindings) {
     .get("/media/stream/:assetId", async ({ request, set, params, query }) => {
       const b = bindings();
       if (!b.env.kidsMvpEnabled) throw new ApiError("NOT_FOUND", "Media tidak ditemukan.");
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const sessionId = (query as Record<string, string | undefined>).session_id;
       if (!sessionId || !/^[0-9a-fA-F-]{36}$/.test(sessionId)) {
         throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.");
@@ -875,7 +875,7 @@ export function learningModule(bindings: () => AppBindings) {
 
     .get("/learning/progress", async ({ request, set }) => {
       const b = bindings();
-      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const ctx = await requireChildAccess(b.auth, b.db, request, b.env);
       const stars = await b.db
         .select({ count: sql<number>`count(*)::int` })
         .from(schema.rewards)

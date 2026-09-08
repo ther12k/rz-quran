@@ -8,6 +8,7 @@ import { ApiError } from "./errors.ts";
 import { identityModule } from "./modules/identity.ts";
 import { familiesModule } from "./modules/families.ts";
 import { learningModule } from "./modules/learning.ts";
+import { kidsPairingModule } from "./modules/kids-pairing.ts";
 import { reportingModule } from "./modules/reporting.ts";
 import { adminModule } from "./modules/admin.ts";
 import { privacyModule } from "./modules/privacy.ts";
@@ -92,6 +93,7 @@ export function buildApp(
     .use(identityModule(bindings))
     .use(familiesModule(bindings))
     .use(learningModule(bindings))
+    .use(kidsPairingModule(bindings))
     .use(reportingModule(bindings))
     .use(adminModule(bindings))
     .use(privacyModule(bindings));

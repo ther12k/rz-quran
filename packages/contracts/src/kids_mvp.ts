@@ -129,6 +129,70 @@ export const kidsAbandonResponseSchema = z.strictObject({
   abandoned: z.boolean(),
 });
 
+// --- Staging-only native pairing (GDM-009) ----------------------------------
+// Server mounts these only outside production with KIDS_PAIRING_ENABLED=true.
+// The staging audience `rzq-kids-staging` is bound server-side; nothing here
+// is client-assertable. Verifier/token are base64url(SHA-256) style strings.
+
+const base64urlSha256 = z.string().regex(/^[A-Za-z0-9_-]{43}$/); // 32 bytes, unpadded
+const buildId = z.string().regex(/^[a-zA-Z0-9._-]{1,64}$/);
+
+/** Native → server: create a pairing (verifier stays native-side). */
+export const kidsPairingCreateStrictSchema = z.strictObject({
+  code_challenge: base64urlSha256,
+  client_build_id: buildId.optional(),
+});
+
+/** Server → native: pairing created; the human code is shown to the parent. */
+export const kidsPairingCreatedSchema = z.strictObject({
+  pairing_id: uuidSchema,
+  human_code: z.string().regex(/^[A-HJ-NP-Z2-9]{8}$/),
+  expires_at: z.string().datetime(),
+  poll_interval_seconds: z.literal(5),
+});
+
+/** Native → server: bounded poll with the verifier (S256 proof). */
+export const kidsPairingTokenStrictSchema = z.strictObject({
+  pairing_id: uuidSchema,
+  code_verifier: base64urlSha256,
+  client_build_id: buildId.optional(),
+});
+
+/** Poll outcome before redemption — no profile data rides on these. */
+export const kidsPairingPollSchema = z.strictObject({
+  status: z.enum(["pending", "denied", "expired"]),
+});
+
+/** One-use redemption: the only moment profile data crosses to native. */
+export const kidsGrantRedemptionSchema = z.strictObject({
+  status: z.literal("approved"),
+  access_token: z.string().min(43).max(86),
+  token_type: z.literal("Bearer"),
+  expires_in: z.number().int().min(1).max(900),
+  audience: z.literal("rzq-kids-staging"),
+  profile: kidsProfileSchema.strict(),
+  lesson_allowlist: z.array(uuidSchema),
+  client_build_id: buildId.nullable(),
+});
+
+/** Parent (web, allowlisted, live gate) → server: approve or deny a pairing. */
+export const kidsPairingApproveStrictSchema = z.strictObject({
+  pairing_id: uuidSchema,
+  code: z.string().regex(/^[A-HJ-NP-Z2-9]{8}$/),
+  child_id: uuidSchema,
+  decision: z.enum(["approve", "deny"]),
+});
+
+export const kidsPairingApproveResponseSchema = z.strictObject({
+  status: z.enum(["approved", "denied"]),
+  profile: kidsProfileSchema.strict().nullable(),
+  grant_audience: z.string().min(1).nullable(),
+});
+
+export const kidsPairingRevokeResponseSchema = z.strictObject({
+  revoked_grants: z.number().int().min(0),
+});
+
 // --- Error envelope (existing ApiError shape) -------------------------------
 
 export const kidsErrorEnvelopeSchema = z.strictObject({

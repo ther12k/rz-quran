@@ -8,6 +8,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { verifyPassword } from "better-auth/crypto";
 import { createDatabase, schema } from "@rzq/database";
+import { revokeGrantsForAuthUser } from "./kids-grant.ts";
 import type { AppEnv } from "./env.ts";
 
 export type Auth = ReturnType<typeof createAuth>;
@@ -71,7 +72,18 @@ export function createAuth(env: AppEnv, db: ReturnType<typeof createDatabase>, h
     user: {
       additionalFields: {},
     },
-    databaseHooks: {},
+    databaseHooks: {
+      session: {
+        // GDM-009 P5: ending an adult session (sign-out or session revocation)
+        // kills every live staging grant that parent approved — server-side,
+        // independent of client cooperation.
+        delete: {
+          after: async (session) => {
+            await revokeGrantsForAuthUser(db, session.userId);
+          },
+        },
+      },
+    },
   });
 }
 
