@@ -32,7 +32,7 @@ export const learningSessions = pgTable(
     status: text("status")
       .notNull()
       .default("active")
-      .$type<"active" | "paused" | "completed" | "replaced" | "expired" | "recalled">(),
+      .$type<"active" | "paused" | "completed" | "replaced" | "expired" | "recalled" | "abandoned">(),
     presentationOrder: jsonb("presentation_order").notNull().default([]),
     lastSequence: integer("last_sequence").notNull().default(0),
     lastHeartbeatAt: timestamp("last_heartbeat_at", { withTimezone: true }),

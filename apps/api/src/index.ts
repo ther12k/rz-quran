@@ -42,6 +42,7 @@ export function buildApp(
     db,
     consentPolicy: consentPolicy(env),
     requestId: currentRequestId,
+    env,
   });
 
   const app = new Elysia()

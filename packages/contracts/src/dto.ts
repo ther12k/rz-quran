@@ -167,7 +167,7 @@ export const learningSessionSchema = z.object({
   session_id: uuidSchema,
   lesson_id: uuidSchema,
   version_id: uuidSchema,
-  status: z.enum(["active", "paused", "completed", "replaced", "expired", "recalled"]),
+  status: z.enum(["active", "paused", "completed", "replaced", "expired", "recalled", "abandoned"]),
   last_sequence: z.number().int().min(0),
   completed_unit_ids: z.array(uuidSchema),
   current_question: publicQuestionSchema.nullable(),

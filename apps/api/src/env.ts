@@ -13,6 +13,10 @@ export type AppEnv = {
   productionChildEnrollmentEnabled: boolean;
   approvedPrivacyPolicyVersion: string | null;
   approvedConsentMethod: string | null;
+  /** GDM-006 rollback switch: new kids routes (abandon, media stream) 404 when off. */
+  kidsMvpEnabled: boolean;
+  /** Dev/test-only local media byte storage; production uses its own decision. */
+  mediaStorageRoot: string | null;
 }
 
 export function parseEnv(source: Record<string, string | undefined>): AppEnv {
@@ -33,6 +37,8 @@ export function parseEnv(source: Record<string, string | undefined>): AppEnv {
     productionChildEnrollmentEnabled: source.PRODUCTION_CHILD_ENROLLMENT_ENABLED === "true",
     approvedPrivacyPolicyVersion: source.APPROVED_PRIVACY_POLICY_VERSION || null,
     approvedConsentMethod: source.APPROVED_CONSENT_METHOD || null,
+    kidsMvpEnabled: source.KIDS_MVP_ENABLED === "true",
+    mediaStorageRoot: source.MEDIA_STORAGE_ROOT || null,
   };
 }
 

@@ -84,6 +84,17 @@ export async function processNextJob(db: ReturnType<typeof createDatabase>): Pro
   });
 }
 
+// Replay-row retention (GDM-010 / QA-20): transport idempotency records expire
+// after their stored retention window; the uniqueness constraint remains the
+// final defense for in-flight replays regardless of this purge.
+export async function purgeExpiredIdempotency(db: ReturnType<typeof createDatabase>): Promise<number> {
+  const deleted = await db
+    .delete(schema.idempotencyRecords)
+    .where(lte(schema.idempotencyRecords.expiresAt, new Date()))
+    .returning({ key: schema.idempotencyRecords.idempotencyKey });
+  return deleted.length;
+}
+
 export async function startWorkerLoop(databaseUrl: string, intervalMs = 2000): Promise<void> {
   const db = createDatabase(databaseUrl);
   console.log("[worker] Job worker loop started.");
@@ -92,6 +103,7 @@ export async function startWorkerLoop(databaseUrl: string, intervalMs = 2000): P
     try {
       const processed = await processNextJob(db);
       if (!processed) {
+        await purgeExpiredIdempotency(db);
         await new Promise((r) => setTimeout(r, intervalMs));
       }
     } catch (err) {

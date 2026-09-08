@@ -237,6 +237,11 @@ export function privacyModule(bindings: () => AppBindings) {
             });
 
             // 3. Remove active data (cascades remove events, progress, rewards).
+            //    Child-scoped idempotency/replay records carry no FK, so they
+            //    are purged explicitly (GDM-010: deletion reaches added state).
+            await tx
+              .delete(schema.idempotencyRecords)
+              .where(eq(schema.idempotencyRecords.actorScope, `child:${child.id}`));
             await tx.delete(schema.children).where(eq(schema.children.id, child.id));
           });
 

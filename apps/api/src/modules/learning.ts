@@ -1,6 +1,7 @@
 // Learning module: catalog (T019/T026 subset), pinned sessions (T020),
 // ordered idempotent events (T021), finish + first-completion star (T022).
 // Public serializers here NEVER include correct option ids or internal notes.
+import { readFile as fsReadFile, stat as fsStat } from "node:fs/promises";
 import { Elysia } from "elysia";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { schema, type Database } from "@rzq/database";
@@ -406,6 +407,7 @@ export function learningModule(bindings: () => AppBindings) {
         const session = locked[0];
         if (!session) throw new ApiError("NOT_FOUND", "Sesi tidak ditemukan.");
         if (session.status === "replaced") throw new ApiError("SESSION_REPLACED", "Latihan ini dilanjutkan di sesi lain.");
+        if (session.status === "abandoned") throw new ApiError("SESSION_EXPIRED", "Sesi latihan sudah dihentikan.");
         if (session.status === "recalled") throw new ApiError("CONTENT_RECALLED", "Materi ini sedang diperiksa.");
         if (session.status === "completed") throw new ApiError("INCOMPLETE_SESSION", "Sesi sudah selesai.");
         if (session.status === "expired" || session.expiresAt.getTime() <= Date.now()) {
@@ -732,6 +734,136 @@ export function learningModule(bindings: () => AppBindings) {
       set.headers["Cache-Control"] = "no-store";
       return outcome;
     })
+    // GDM-006: child-initiated idempotent termination (contract: abandon).
+    // Frees the one-writable-session slot; never touches completed sessions.
+    // Gated by KIDS_MVP_ENABLED (rollback switch, default off).
+    .post("/learning/sessions/:sessionId/abandon", async ({ request, set, params }) => {
+      const b = bindings();
+      if (!b.env.kidsMvpEnabled) throw new ApiError("NOT_FOUND", "Sesi tidak ditemukan.");
+      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const idemKey = request.headers.get("Idempotency-Key");
+
+      const result = await withIdempotency({
+        db: b.db,
+        actorScope: `child:${ctx.child.id}`,
+        parentId: null,
+        method: "POST",
+        route: "/api/v1/learning/sessions/:sessionId/abandon",
+        key: idemKey,
+        requestBody: { session_id: params.sessionId },
+        handler: async () => {
+          const outcome = await b.db.transaction(async (tx) => {
+            const locked = await tx
+              .select()
+              .from(schema.learningSessions)
+              .where(and(eq(schema.learningSessions.id, params.sessionId), eq(schema.learningSessions.childId, ctx.child.id)))
+              .for("update")
+              .limit(1);
+            const session = locked[0];
+            if (!session) throw new ApiError("NOT_FOUND", "Sesi tidak ditemukan.");
+            if (session.status === "active" || session.status === "paused") {
+              // Time-expired sessions are already terminal server-side; do not
+              // rewrite their status (server-authoritative state, QA-08).
+              if (session.expiresAt.getTime() <= Date.now()) {
+                return { session_id: session.id, status: "expired" as const, abandoned: false };
+              }
+              await tx
+                .update(schema.learningSessions)
+                .set({ status: "abandoned" })
+                .where(eq(schema.learningSessions.id, session.id));
+              return { session_id: session.id, status: "abandoned" as const, abandoned: true };
+            }
+            // Idempotent neutral outcome for terminal states; nothing changes.
+            return { session_id: session.id, status: session.status, abandoned: session.status === "abandoned" };
+          });
+          return { status: 200, body: outcome };
+        },
+      });
+      set.status = result.status;
+      set.headers["Cache-Control"] = "no-store";
+      return result.body;
+    })
+    // GDM-006: bounded media gateway. Requires child context, an owned
+    // non-terminal session, and asset membership in the session's pinned
+    // version. Serves only small verified audio marked for streaming from the
+    // configured local storage root; anything else fails closed.
+    .get("/media/stream/:assetId", async ({ request, set, params, query }) => {
+      const b = bindings();
+      if (!b.env.kidsMvpEnabled) throw new ApiError("NOT_FOUND", "Media tidak ditemukan.");
+      const ctx = await requireChildSessionDb(b.auth, b.db, request);
+      const sessionId = (query as Record<string, string | undefined>).session_id;
+      if (!sessionId || !/^[0-9a-fA-F-]{36}$/.test(sessionId)) {
+        throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.");
+      }
+
+      const sessionRows = await b.db
+        .select()
+        .from(schema.learningSessions)
+        .where(and(eq(schema.learningSessions.id, sessionId), eq(schema.learningSessions.childId, ctx.child.id)))
+        .limit(1);
+      const session = sessionRows[0];
+      if (!session) throw new ApiError("NOT_FOUND", "Sesi tidak ditemukan.");
+      if (session.status === "recalled") throw new ApiError("CONTENT_RECALLED", "Materi ini sedang diperiksa.");
+      if (session.status === "abandoned") throw new ApiError("SESSION_EXPIRED", "Sesi latihan sudah dihentikan.");
+      if (!["active", "paused"].includes(session.status) || session.expiresAt.getTime() <= Date.now()) {
+        throw new ApiError("SESSION_EXPIRED", "Sesi latihan berakhir.");
+      }
+
+      // Session membership: the asset must belong to the pinned version.
+      const memberRows = await b.db
+        .select({ id: schema.lessonUnits.id })
+        .from(schema.lessonUnits)
+        .where(
+          and(
+            eq(schema.lessonUnits.versionId, session.versionId),
+            eq(schema.lessonUnits.audioAssetId, params.assetId),
+          ),
+        )
+        .limit(1);
+      if (memberRows.length === 0) throw new ApiError("NOT_FOUND", "Media tidak ditemukan.");
+
+      const assetRows = await b.db
+        .select()
+        .from(schema.mediaAssets)
+        .where(eq(schema.mediaAssets.id, params.assetId))
+        .limit(1);
+      const asset = assetRows[0];
+      const MAX_AUDIO_BYTES = 3 * 1024 * 1024;
+      const MAX_AUDIO_MS = 20_000;
+      const boundsOk =
+        asset &&
+        asset.status === "verified" &&
+        asset.kind === "audio" &&
+        asset.deliveryPolicy === "stream" &&
+        asset.mimeType.startsWith("audio/") &&
+        asset.sizeBytes <= MAX_AUDIO_BYTES &&
+        (asset.durationMs === null || asset.durationMs <= MAX_AUDIO_MS);
+      if (!boundsOk || !b.env.mediaStorageRoot) {
+        throw new ApiError("MEDIA_UNAVAILABLE", "Audio belum tersedia untuk materi ini.");
+      }
+      const objectKey = asset.objectKey;
+      if (objectKey.includes("..") || objectKey.startsWith("/")) {
+        throw new ApiError("MEDIA_UNAVAILABLE", "Audio belum tersedia untuk materi ini.");
+      }
+      const filePath = `${b.env.mediaStorageRoot}/${objectKey}`;
+      let bytes: ArrayBuffer;
+      try {
+        const stat = await fsStat(filePath);
+        if (stat.size > MAX_AUDIO_BYTES) {
+          throw new ApiError("MEDIA_UNAVAILABLE", "Audio belum tersedia untuk materi ini.");
+        }
+        bytes = (await fsReadFile(filePath)).buffer as ArrayBuffer;
+      } catch (err) {
+        if (err instanceof ApiError) throw err;
+        throw new ApiError("MEDIA_UNAVAILABLE", "Audio belum tersedia untuk materi ini.");
+      }
+      set.headers["Cache-Control"] = "no-store";
+      set.headers["Content-Type"] = asset.mimeType;
+      if (asset.sha256) set.headers["X-Content-SHA256"] = asset.sha256;
+      set.status = 200;
+      return new Response(bytes);
+    })
+
     .get("/learning/progress", async ({ request, set }) => {
       const b = bindings();
       const ctx = await requireChildSessionDb(b.auth, b.db, request);

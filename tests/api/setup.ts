@@ -17,7 +17,7 @@ export type TestApp = Awaited<ReturnType<typeof createTestApp>>;
 
 let counter = 0;
 
-export async function createTestApp() {
+export async function createTestApp(extraEnv: Record<string, string> = {}) {
   const dbName = `rzq_test_${process.pid}_${++counter}`;
   const admin = postgres(ADMIN_URL, { max: 1 });
   await admin`create database ${admin(dbName)}`;
@@ -48,6 +48,7 @@ export async function createTestApp() {
       AUTH_BASE_URL: "http://test.local",
       APP_ORIGIN: "http://test.local",
       DEMO_MODE: "true",
+      ...extraEnv,
     },
     { onVerificationEmail: (url) => verificationUrls.push(url) },
   );

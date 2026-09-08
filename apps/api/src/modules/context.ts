@@ -168,4 +168,5 @@ export type AppBindings = {
   db: Database;
   consentPolicy: ConsentPolicy;
   requestId: string;
+  env: import("../env.ts").AppEnv;
 };

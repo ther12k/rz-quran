@@ -97,7 +97,7 @@ export const kidsSessionStrictSchema = z.strictObject({
   session_id: uuidSchema,
   lesson_id: uuidSchema,
   version_id: uuidSchema,
-  status: z.enum(["active", "paused", "completed", "replaced", "expired", "recalled"]),
+  status: z.enum(["active", "paused", "completed", "replaced", "expired", "recalled", "abandoned"]),
   last_sequence: z.number().int().min(0),
   completed_unit_ids: z.array(uuidSchema),
   current_question: kidsPublicQuestionStrictSchema.nullable(),
@@ -121,6 +121,13 @@ export const kidsBootstrapStrictSchema = z.strictObject({
 export const kidsStartSessionStrictSchema = startSessionSchema.strict();
 export const kidsAnswerRequestStrictSchema = answerRequestSchema.strict();
 export const kidsEventBatchStrictSchema = eventBatchSchema.strict();
+
+/** Abandon response: idempotent termination outcome (GDM-006). */
+export const kidsAbandonResponseSchema = z.strictObject({
+  session_id: uuidSchema,
+  status: z.string().min(1).max(32),
+  abandoned: z.boolean(),
+});
 
 // --- Error envelope (existing ApiError shape) -------------------------------
 
