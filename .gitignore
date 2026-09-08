@@ -11,3 +11,6 @@ test-results/
 .DS_Store
 *.log
 .local/
+
+# Godot web export synced by the client repo (not committed here)
+apps/web/public/kids-runtime/

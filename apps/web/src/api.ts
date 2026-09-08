@@ -24,6 +24,11 @@ export class ApiError extends Error {
   }
 }
 
+/** Raw same-origin request used by the kids bridge host (GDM-008). */
+export function apiRequest<T>(method: string, path: string, body?: unknown, idempotencyKey?: string): Promise<T> {
+  return request<T>(method, path, body, idempotencyKey);
+}
+
 async function request<T>(method: string, path: string, body?: unknown, idempotencyKey?: string): Promise<T> {
   const res = await fetch(path, {
     method,

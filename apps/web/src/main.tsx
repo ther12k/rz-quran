@@ -12,6 +12,7 @@ import { LessonPlayerPage } from "./pages/lesson-player.tsx";
 import { GatePage } from "./pages/gate.tsx";
 import { ParentProgressPage } from "./pages/parent-progress.tsx";
 import { AdminWorkspacePage } from "./pages/admin.tsx";
+import KidsGodotRuntimePage from "./pages/kids-godot.tsx";
 import "./styles.css";
 
 // Remount the player when the lesson param changes so step index and
@@ -91,6 +92,7 @@ function ModeRouter() {
           <Route path="/anak/beranda" element={<ChildHomePage onExit={refreshMe} />} />
           <Route path="/anak/belajar" element={<CatalogPage />} />
           <Route path="/anak/belajar/:lessonId" element={<LessonPlayerRoute onChanged={refreshMe} />} />
+          <Route path="/anak/godot" element={<KidsGodotRuntimePage />} />
           <Route path="/anak/*" element={<Navigate to="/anak/beranda" replace />} />
         </Routes>
       );

@@ -5,7 +5,14 @@ import { readFile as fsReadFile, stat as fsStat } from "node:fs/promises";
 import { Elysia } from "elysia";
 import { and, asc, eq, inArray, sql } from "drizzle-orm";
 import { schema, type Database } from "@rzq/database";
-import { answerRequestSchema, eventBatchSchema, startSessionSchema } from "@rzq/contracts";
+import {
+  answerRequestSchema,
+  eventBatchSchema,
+  startSessionSchema,
+  kidsAnswerRequestStrictSchema,
+  kidsEventBatchStrictSchema,
+  kidsStartSessionStrictSchema,
+} from "@rzq/contracts";
 import { ApiError } from "../errors.ts";
 import { requireChildSessionDb, type AppBindings, type ChildContext } from "./context.ts";
 import { withIdempotency } from "../idempotency.ts";
@@ -328,7 +335,8 @@ export function learningModule(bindings: () => AppBindings) {
     .post("/learning/sessions", async ({ request, set, body }) => {
       const b = bindings();
       const ctx = await requireChildSessionDb(b.auth, b.db, request);
-      const parsed = startSessionSchema.safeParse(body);
+      // GDM-007: strict write schema — unknown fields reject (QA-04).
+      const parsed = kidsStartSessionStrictSchema.safeParse(body);
       if (!parsed.success) throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.");
       const idemKey = request.headers.get("Idempotency-Key");
       const result = await withIdempotency({
@@ -391,7 +399,7 @@ export function learningModule(bindings: () => AppBindings) {
     .post("/learning/sessions/:sessionId/events", async ({ request, set, body, params }) => {
       const b = bindings();
       const ctx = await requireChildSessionDb(b.auth, b.db, request);
-      const parsed = eventBatchSchema.safeParse(body);
+      const parsed = kidsEventBatchStrictSchema.safeParse(body);
       if (!parsed.success) {
         throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.", parsed.error.flatten());
       }
@@ -519,7 +527,8 @@ export function learningModule(bindings: () => AppBindings) {
     .post("/learning/sessions/:sessionId/answers", async ({ request, set, body, params }) => {
       const b = bindings();
       const ctx = await requireChildSessionDb(b.auth, b.db, request);
-      const parsed = answerRequestSchema.safeParse(body);
+      // GDM-007: strict write schema — client-computed results cannot ride in.
+      const parsed = kidsAnswerRequestStrictSchema.safeParse(body);
       if (!parsed.success) throw new ApiError("VALIDATION_ERROR", "Permintaan tidak valid.", parsed.error.flatten());
       const input = parsed.data;
 
