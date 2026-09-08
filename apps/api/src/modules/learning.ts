@@ -619,12 +619,19 @@ export function learningModule(bindings: () => AppBindings) {
         }
 
         // A different event already answered this question: first stands.
+        // The duplicate event row above still consumed a sequence slot, so
+        // the session cursor must advance to keep the event sequence
+        // contiguous (QA-12: current cursor remains consistent).
         const existingAnswer = await tx
           .select()
           .from(schema.firstAnswers)
           .where(and(eq(schema.firstAnswers.sessionId, session.id), eq(schema.firstAnswers.questionId, question.id)))
           .limit(1);
         const stored = existingAnswer[0]!;
+        await tx
+          .update(schema.learningSessions)
+          .set({ lastSequence: sequence })
+          .where(eq(schema.learningSessions.id, session.id));
         return {
           event_id: input.event_id,
           sequence,

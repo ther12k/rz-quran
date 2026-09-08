@@ -11,7 +11,8 @@
     "generate": "drizzle-kit generate",
     "migrate": "bun run src/migrate.ts",
     "seed:demo": "bun run src/seed-demo.ts",
-    "seed:pilot": "bun run src/seed-pilot.ts"
+    "seed:pilot": "bun run src/seed-pilot.ts",
+    "seed:fixture-mvp": "bun run src/seed-fixture-mvp.ts"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.2"
