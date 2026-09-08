@@ -1,0 +1,22 @@
+{
+  "contract_version": "1",
+  "content_mode": "fixture",
+  "profile": {
+    "id": "3f2504e0-4f89-11d3-9a0c-0305e82c3301",
+    "nickname": "Aisyah"
+  },
+  "lesson": {
+    "lesson_id": "0d9a4f50-6f2f-4e1a-9c1d-52b6f0a4e101",
+    "version_id": "7c2e1b30-8a44-4c47-9f21-3a55e7b8d102",
+    "title": "Latihan Simulasi Bentuk dan Warna",
+    "lesson_type": "listening",
+    "stage_key": "tahap_1_huruf_dasar",
+    "estimated_minutes": 5,
+    "access": "available",
+    "prerequisite_lesson_ids": [],
+    "demo_only": true,
+    "practice": { "completed_units": 0, "required_units": 3, "percent": 0 }
+  },
+  "active_session": null,
+  "server_time": "2026-09-08T03:00:00Z"
+}

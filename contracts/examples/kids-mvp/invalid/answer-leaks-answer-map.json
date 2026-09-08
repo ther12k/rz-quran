@@ -1,0 +1,11 @@
+{
+  "event_id": "c3d4e5f6-7777-4a88-9b99-000000000003",
+  "sequence": 3,
+  "question_id": "a1111111-2222-4c33-9d44-555555555501",
+  "selected_option_id": "opt_a",
+  "correct": true,
+  "first_response": true,
+  "replayed": false,
+  "correct_option_id": "opt_b",
+  "answer_key": { "opt_a": false, "opt_b": true }
+}

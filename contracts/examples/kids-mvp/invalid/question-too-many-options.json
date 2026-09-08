@@ -1,0 +1,23 @@
+{
+  "session_id": "5e6f1a20-9b33-4a55-8c42-7d10f3c9e201",
+  "lesson_id": "0d9a4f50-6f2f-4e1a-9c1d-52b6f0a4e101",
+  "version_id": "7c2e1b30-8a44-4c47-9f21-3a55e7b8d102",
+  "status": "active",
+  "last_sequence": 0,
+  "completed_unit_ids": [],
+  "current_question": {
+    "question_id": "a1111111-2222-4c33-9d44-555555555501",
+    "unit_id": "a1b2c3d4-1111-4aaa-9bbb-000000000003",
+    "prompt": "Pilihan lima tidak sesuai kontrak MVP.",
+    "options": [
+      { "option_id": "opt_a", "label": "A" },
+      { "option_id": "opt_b", "label": "B" },
+      { "option_id": "opt_c", "label": "C" },
+      { "option_id": "opt_d", "label": "D" },
+      { "option_id": "opt_e", "label": "E" }
+    ]
+  },
+  "practice": { "completed_units": 0, "required_units": 3, "percent": 0 },
+  "estimated_active_ms": 0,
+  "expires_at": "2026-09-09T03:00:00Z"
+}
