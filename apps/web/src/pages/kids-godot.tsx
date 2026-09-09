@@ -37,6 +37,7 @@ export default function KidsGodotRuntimePage() {
       api: apiRequest,
       contentMode: "fixture",
       postToRuntime: (message: BridgeResponse, transfer?: ArrayBuffer[]) => {
+        if (import.meta.env.DEV) console.log(`[bridge] posting response req=${message.request_id} ok=${message.ok}`);
         iframeRef.current?.contentWindow?.postMessage(message, window.location.origin, transfer ?? []);
       },
     });
@@ -48,6 +49,12 @@ export default function KidsGodotRuntimePage() {
         { origin: event.origin, source: event.source, data: event.data },
         iframeRef.current?.contentWindow ?? null,
       );
+      if (import.meta.env.DEV) {
+        // Live-debug aid (GDM-008 integration): shows accept/reject reasons.
+        console.log(
+          `[bridge] ${decision.accept ? "accept" : `reject:${decision.reason}`} req=${String((event.data as { request_id?: string })?.request_id)}`,
+        );
+      }
       if (!decision.accept) {
         // Wrong origin/source/nonce/action: drop silently before any dispatch.
         return;
