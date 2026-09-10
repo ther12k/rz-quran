@@ -17,9 +17,11 @@ export const MAX_MESSAGE_BYTES = 64 * 1024;
 
 export const BRIDGE_ACTIONS = [
   "bootstrap",
+  "get_lesson",
   "start_session",
   "get_session",
   "submit_attempt",
+  "submit_events",
   "finish_session",
   "abandon_session",
   "get_media",
@@ -80,6 +82,8 @@ function payloadOk(action: BridgeAction, payload: unknown): boolean {
   switch (action) {
     case "start_session":
       return onlyUuids(["lesson_id"]);
+    case "get_lesson":
+      return onlyUuids(["lesson_id"]);
     case "get_session":
       return keys.length === 0;
     case "submit_attempt":
@@ -89,6 +93,30 @@ function payloadOk(action: BridgeAction, payload: unknown): boolean {
         OPTION_RE.test(payload.selected_option_id) &&
         keys.length === 4
       );
+    case "submit_events": {
+      // Exact-shape validation per progress event (mirror of the contract):
+      // only unit_acknowledged crosses the bridge from the lesson flow.
+      if (keys.length !== 2 || !Array.isArray(payload.events) || payload.events.length < 1 || payload.events.length > 20) {
+        return false;
+      }
+      if (typeof payload.session_id !== "string" || !UUID_RE.test(payload.session_id as string)) return false;
+      return (payload.events as unknown[]).every((raw) => {
+        if (!isRecord(raw)) return false;
+        const ek = Object.keys(raw);
+        if (ek.length !== 5) return false;
+        return (
+          typeof raw.event_id === "string" &&
+          UUID_RE.test(raw.event_id) &&
+          typeof raw.sequence === "number" &&
+          Number.isInteger(raw.sequence) &&
+          raw.sequence >= 1 &&
+          raw.client_at === null &&
+          raw.type === "unit_acknowledged" &&
+          typeof raw.unit_id === "string" &&
+          UUID_RE.test(raw.unit_id)
+        );
+      });
+    }
     case "get_media":
       return onlyUuids(["asset_id", "session_id"]);
     case "finish_session":
@@ -202,6 +230,9 @@ export function createBridgeHost(deps: BridgeHostDeps): BridgeHost {
         case "start_session":
           ok(id, await api("POST", "/api/v1/learning/sessions", { lesson_id: request.payload!.lesson_id }, uuid()));
           return;
+        case "get_lesson":
+          ok(id, await api("GET", `/api/v1/lessons/${request.payload!.lesson_id}`));
+          return;
         case "get_session":
           ok(id, await api("GET", `/api/v1/learning/sessions/${request.payload!.session_id}`));
           return;
@@ -218,6 +249,9 @@ export function createBridgeHost(deps: BridgeHostDeps): BridgeHost {
           );
           return;
         }
+        case "submit_events":
+          ok(id, await api("POST", `/api/v1/learning/sessions/${request.payload!.session_id}/events`, { events: request.payload!.events }));
+          return;
         case "finish_session":
           ok(id, await api("POST", `/api/v1/learning/sessions/${request.payload!.session_id}/finish`, {}, uuid()));
           return;
