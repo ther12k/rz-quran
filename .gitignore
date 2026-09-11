@@ -14,3 +14,6 @@ test-results/
 
 # Godot web export synced by the client repo (not committed here)
 apps/web/public/kids-runtime/
+
+# Local diagnostic output
+.devlogs/
