@@ -1,0 +1,6 @@
+# False positives (verified 2026-09-11, full-history scan v8.24.3):
+# - "generic-api-key" rule fires on variable NAMES / identifiers like
+#   QF_CLIENT_ID=, stage_key:, storage keys — the values at every flagged
+#   site are empty strings, code identifiers, or "fixture" placeholders.
+# - .env.example holds intentional dev placeholders (empty secrets,
+#   local_only DB URL, replace_with_* patterns) and stays committed.
